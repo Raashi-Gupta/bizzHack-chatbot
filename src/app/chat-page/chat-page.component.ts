@@ -72,7 +72,7 @@ export class ChatPageComponent {
     let reply = "I'm not sure how to answer that yet.";
 
     if (lower.includes("saint-gobain") || lower.includes("saint gobain")) {
-      if (lower.includes("what") && lower.includes("do")) {
+      if (lower.includes("what") || lower.includes("do")) {
         reply = "Saint-Gobain designs, manufactures, and distributes materials and solutions for the construction, mobility, and industrial markets.";
       } else if (lower.includes("where")) {
         reply = "Saint-Gobain is headquartered in Courbevoie, France, and operates in over 75 countries.";

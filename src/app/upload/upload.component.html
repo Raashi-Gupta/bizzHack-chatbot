@@ -1,6 +1,7 @@
 <div class="upload-container">
   <input type="file" (change)="onFileSelected($event)" multiple />
-  <button class="upload-btn" (click)="onUpload()" [disabled]="!selectedFiles.length">
+  <button pbutton class="upload-btn" (click)="onUpload()" [disabled]="!selectedFiles.length" 
+  [ngClass]="selectedFiles.length > 0 ? 'p-button-primary' : 'p-button-secondary'">
     Upload
   </button>
 
