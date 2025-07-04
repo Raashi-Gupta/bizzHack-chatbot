@@ -1,0 +1,24 @@
+.upload-container {
+    padding: 20px;
+    border: 1px solid #ccc;
+    max-width: 400px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .upload-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .upload-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
