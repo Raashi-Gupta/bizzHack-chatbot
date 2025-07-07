@@ -1,0 +1,24 @@
+<div class="operation-tabs px-4 py-3">
+    <div class="tab-list d-flex flex-wrap gap-2">
+        <div class="operation-tab px-4 py-2 rounded text-white d-flex align-items-center gap-2"
+            *ngFor="let item of operations" [ngStyle]="{ 'background-color': item.color, 'cursor': 'pointer' }"
+            [class.active]="selectedTab === item.value" (click)="selectTab(item.value)">
+            <i [class]="'pi ' + item.icon"></i>
+            <span>{{ item.name }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="questions-list p-4" *ngIf="selectedTab;else showSelectTab">
+    <h4>{{ selectedTab }} - Most Searched</h4>
+    <ul>
+        <li *ngFor="let question of questionsMap[selectedTab]" class="question-list" (click)="redirectToChat(question)">
+            {{ question }}
+        </li>
+    </ul>
+</div>
+<ng-template #showSelectTab>
+    <div class="questions-list p-4">
+        <h4>Please select an operation</h4>
+    </div>
+</ng-template>

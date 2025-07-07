@@ -1,7 +1,8 @@
-import { Component, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
+import { Component, AfterViewChecked, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-chat-page',
@@ -10,12 +11,22 @@ import { CommonModule } from '@angular/common';
   templateUrl: './chat-page.component.html',
   styleUrl: './chat-page.component.scss'
 })
-export class ChatPageComponent implements AfterViewChecked {
+export class ChatPageComponent implements AfterViewChecked, OnInit {
   messages: { text: string, sender: 'user' | 'bot' }[] = [];
   currentMessage: string = '';
   startedChat = false;
 
   @ViewChild('chatBox') chatBox!: ElementRef;
+
+  constructor(private route:ActivatedRoute){}
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params  => {
+      const question = params['question'];
+      this.currentMessage = question;
+      this.sendMessage();
+    });
+  }
 
   sendMessage() {
     const message = this.currentMessage.trim();
@@ -44,7 +55,7 @@ export class ChatPageComponent implements AfterViewChecked {
     if (this.chatBox && this.startedChat) {
       try {
         this.chatBox.nativeElement.scrollTop = this.chatBox.nativeElement.scrollHeight;
-      } catch (err) {}
+      } catch (err) { }
     }
   }
 }

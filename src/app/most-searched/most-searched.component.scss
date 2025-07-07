@@ -1,0 +1,39 @@
+.operation-tab {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s, color 0.3s;
+  color: #fff;
+
+  &:hover {
+    transform: scale(1.03);
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+
+  &.active {
+    outline: 3px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3); /* darker overlay */
+    color: #fff; /* always white text */
+    font-weight: 600;
+    transform: scale(1.05);
+  }
+}
+
+.question-list{
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #d4eaf5;
+    margin: 10px;
+    color: #5d5454;
+}
+.question-list:hover {
+  cursor: pointer;
+  border: 5px solid #d7edf9;
+}
+
+
+.questions-list{
+    background-color: #e8f7ff;
+    margin: 0 10px;
+    
+}

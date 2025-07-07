@@ -1,18 +1,15 @@
 <div class="d-flex flex-column flex-md-row min-vh-100 w-100">
 
-    <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center bg-primary text-white">
-        <img src="/assets/SGlogo.png" alt="illustration" class="img-fluid" />
+    <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center text-white" style="flex-direction: column; background-color: rgb(212 234 245);">
+        <span class="projectName">DataBot</span>
+        <img src="assets/sglogo.png" alt="illustration" class="img-fluid" style="max-height: 100px;"/>
     </div>
 
     
     <div class="col-12 col-md-6 d-flex flex-column justify-content-center px-5">
         <div class="w-100" style="max-width: 500px;">
-            <h2 class="fw-bold mb-2">Login to enjoy</h2>
-            <h3 class="text-primary fw-bold mb-3">More Features.</h3>
-
-            <div class="d-flex gap-4 mb-3">
-                <span class="fw-bold text-primary border-bottom border-primary pb-1">Login</span>
-            </div>
+            <h2 class="fw-bold mb-2">Login to enjoy,</h2>
+            <h3 class="fw-bold mb-3">More Features.</h3>
 
             <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
                 <div class="mb-3">

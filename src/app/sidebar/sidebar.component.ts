@@ -13,7 +13,7 @@ export class SidebarComponent {
   menuItems = [
     { label: 'Home', icon: 'pi pi-home', route: '/home' },
     { label: 'Chat', icon: 'pi pi-comments', route: '/chat' },
-    { label: `FAQ's`, icon: 'pi pi-question-circle', route: '/' },
+    { label: `Most Searched`, icon: 'pi pi-question-circle', route: '/most-searched' },
     { label: 'Upload a file', icon: 'pi pi-upload', route: '/upload' },
   ];
 

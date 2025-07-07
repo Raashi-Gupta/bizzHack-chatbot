@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // <-- IMPORT THIS
 import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-header',
-  imports: [FormsModule,DropdownModule],
+  imports: [FormsModule, DropdownModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
-    languages = [
+export class HeaderComponent implements OnInit {
+
+  languages = [
     { label: 'English', value: 'en' },
     { label: 'Hindi - हिन्दी', value: 'hi' },
     { label: 'Tamil - தமிழ்', value: 'ta' },
@@ -22,9 +23,18 @@ export class HeaderComponent {
     { label: 'Punjabi - ਪੰਜਾਬੀ', value: 'pa' },
     { label: 'Urdu - اردو', value: 'ur' }
   ];
-  selectedLanguage = 'en'; 
+  selectedLanguage = 'en';
   isOpen = false;
-    toggleDropdown() {
+  userName: string = '';
+
+  ngOnInit(): void {
+    const storedName = localStorage.getItem('userName');
+    if (storedName) {
+      this.userName = storedName;
+    }
+  }
+
+  toggleDropdown() {
     this.isOpen = !this.isOpen;
   }
 

@@ -1,0 +1,37 @@
+/* app.component.scss */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent scrollbars from body */
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+}
+
+.app-header {
+  flex: 0 0 auto; /* Keeps header fixed height */
+  /* Optional: give it a height if needed */
+  /* height: 60px; */
+}
+
+.app-content {
+  flex: 1 1 auto;
+  display: flex;
+  overflow: hidden; /* Prevent double scrollbars */
+}
+
+.app-sidebar {
+  height: 100%;
+  flex: 0 0 auto;
+}
+
+// .flex-grow-1 {
+//   overflow-y: auto;
+//   height: 100%;
+//   padding: 1rem; /* Optional */
+// }

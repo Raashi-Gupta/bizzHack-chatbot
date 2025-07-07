@@ -6,41 +6,21 @@ import { HomeScreenComponent } from './home-screen/home-screen.component';
 import { LoginComponent } from './login/login.component';
 import { MainLayoutComponent } from './main-layout.component';
 import { AuthLayoutComponent } from './auth-layout.component';
+import { MostSearchedComponent } from './most-searched/most-searched.component';
+import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
-  // { path: 'upload', component: UploadComponent },   
-  // { path: 'chat', component: ChatPageComponent},
-  // { path: 'login', component: LoginComponent},
-  // { path: 'home', component: HomeScreenComponent},
-  // { path: '', component: HomeScreenComponent },      
-  // { path: '**', redirectTo: '' }, 
-  {
-    path: '',
-    component: MainLayoutComponent,
-    children: [
-      { path: 'upload', component: UploadComponent },
-      { path: 'chat', component: ChatPageComponent },
-      { path: 'home', component: HomeScreenComponent },
-    ]
-  },
-  {
-    path: '',
-    component: AuthLayoutComponent,
-    children: [
+
+      { path: 'upload', component: UploadComponent, canActivate: [authGuard]  },
+      { path: 'chat', component: ChatPageComponent, canActivate: [authGuard]  },
+      { path: 'home', component: HomeScreenComponent, canActivate: [authGuard]  },
+      { path: 'most-searched', component: MostSearchedComponent, canActivate: [authGuard] },
+
       { path: 'login', component: LoginComponent },
-      { path: '', component: HomeScreenComponent },
-      { path: '**', redirectTo: '' },
-    ]
-  },
-  {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'login'
-  },
-  {
-    path: '**',
-    redirectTo: 'login'
-  }
+      { path: '', component: HomeScreenComponent, canActivate: [authGuard] },
+      { path: '**', redirectTo: '' }
+
+ 
 ];
 
 @NgModule({
