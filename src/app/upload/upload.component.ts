@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-upload',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './upload.component.html',
   styleUrl: './upload.component.scss',
@@ -10,6 +11,7 @@ import { Component } from '@angular/core';
 export class UploadComponent {
   selectedFiles: File[] = [];
   uploadedFiles: File[] = [];
+  showSuccessMessage = false;
 
   onFileSelected(event: any): void {
     if (event.target.files) {
@@ -20,7 +22,10 @@ export class UploadComponent {
   onUpload(): void {
     this.uploadedFiles = [...this.selectedFiles];
     this.selectedFiles = [];
+    this.showSuccessMessage = true;
 
-    console.log('Files uploaded temporarily:', this.uploadedFiles);
+    setTimeout(() => {
+      this.showSuccessMessage = false;
+    }, 5000);
   }
 }
