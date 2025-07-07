@@ -1,0 +1,86 @@
+.header-container{
+    background-color: white;
+    border-bottom: 1px solid #c4c4c4;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+.title-header{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.title{
+    color: rgb(96, 0, 0);
+    font-weight: 600;
+    display: flex;
+    gap: 4px;
+}
+.p-dropdown.pill-dropdown {
+  background-color: #dedede;     
+  color: #ffffff;                
+  border-radius: 999px;    
+  border: none;
+  padding: 0 0.5rem;
+  height: 40px;
+  font-size: 14px;
+}
+
+.language-dropdown{
+    display: flex;
+    gap: 8px;
+}
+
+.user-dropdown {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+
+  .user-avatar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #001f3f;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    user-select: none;
+
+    img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+
+    i {
+      font-size: 0.8rem;
+    }
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    padding: 0.5rem 0;
+    margin: 0.25rem 0 0;
+    border-radius: 0.5rem;
+    width: 150px;
+    z-index: 100;
+
+    li {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover {
+        background-color: #f0f0f0;
+      }
+    }
+  }
+}

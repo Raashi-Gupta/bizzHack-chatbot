@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { filter } from 'rxjs';
+import { HeaderComponent } from './layout/header/header.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SidebarComponent],
+  imports: [RouterOutlet, SidebarComponent,HeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
