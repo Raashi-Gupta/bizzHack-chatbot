@@ -1,0 +1,64 @@
+// .logo {
+//   height: 40px;
+//   width: auto;
+// }
+
+// .project-name {
+//   font-weight: 600;
+//   color: #333;
+// }
+
+// .operation-card {
+//   min-height: 100px;
+//   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+//   background-blend-mode: overlay;
+//   transition: transform 0.2s ease;
+//   &:hover {
+//     transform: translateY(-5px);
+//   }
+// }
+.logo {
+  height: 40px;
+  width: auto;
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.project-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.operation-card {
+  min-height: 120px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-blend-mode: overlay;
+  border-radius: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.3s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+  }
+
+  .icon-wrapper {
+    font-size: 1.8rem;
+    opacity: 0.85;
+    i{
+      font-size: 40px;
+    }
+  }
+
+  h5 {
+    font-size: 1.1rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    opacity: 0.85;
+  }
+}

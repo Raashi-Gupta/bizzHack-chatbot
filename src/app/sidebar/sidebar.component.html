@@ -1,0 +1,30 @@
+<div [class.collapsed]="collapsed" class="sidebar-container d-flex flex-column">
+
+  <!-- Toggle Button -->
+  <button class="btn btn-sm btn-outline-light align-self-end m-2" (click)="toggleSidebar()">
+    <i class="pi" [ngClass]="collapsed ? 'pi-angle-double-right' : 'pi-angle-double-left'"></i>
+  </button>
+
+  <!-- Scrollable Menu Area -->
+  <div class="flex-grow-1 overflow-auto">
+    <ul class="nav flex-column px-3">
+      <li class="nav-item mb-2" *ngFor="let item of menuItems">
+        <a class="nav-link d-flex align-items-center gap-2" [routerLink]="item.route">
+          <i [class]="item.icon"></i>
+          <span *ngIf="!collapsed">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Fixed Logo at Bottom -->
+  <div class="p-3 text-center">
+    <img
+      src="assets/sglogo.png"
+      alt="Company Logo"
+      class="sidebar-logo"
+      [ngStyle]="{ width: collapsed ? '30px' : '100%' }"
+    />
+  </div>
+
+</div>

@@ -1,0 +1,38 @@
+.sidebar-container {
+  width: 240px;
+  min-height: 100vh;
+  background-color: #d4eaf5;
+  color: #264b9a;
+  transition: width 0.3s ease;
+
+  .nav-link {
+    padding: 0.5rem 0;
+    transition: background 0.3s ease;
+    color: #264b9a;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+    color: #264b9a;
+  }
+
+  &.collapsed {
+    width: 60px;
+
+    .nav-link {
+      justify-content: center;
+    }
+
+    span {
+      display: none;
+    }
+  }
+}
+.sidebar a.active {
+  background: rgba(255, 255, 255, 0.1);
+  border-left: 3px solid #00bfa6;
+}
