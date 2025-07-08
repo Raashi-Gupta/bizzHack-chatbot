@@ -3,6 +3,7 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-chat-page',
@@ -13,38 +14,48 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ChatPageComponent implements AfterViewChecked, OnInit {
   messages: { text: string, sender: 'user' | 'bot' }[] = [];
-  currentMessage: string = '';
+  currentMessage: string = '?';
   startedChat = false;
 
   @ViewChild('chatBox') chatBox!: ElementRef;
 
-  constructor(private route:ActivatedRoute){}
+  constructor(private route:ActivatedRoute, private http: HttpClient){}
 
   ngOnInit() {
     this.route.queryParams.subscribe(params  => {
       const question = params['question'];
-      this.currentMessage = question;
-      this.sendMessage();
+      if(question)
+      {this.currentMessage = question;
+      this.sendMessage();}
     });
   }
 
   sendMessage() {
-    const message = this.currentMessage.trim();
-    if (message) {
-      if (!this.startedChat) this.startedChat = true;
-      this.messages.push({ text: message, sender: 'user' });
-      this.currentMessage = '';
-      setTimeout(() => this.replyToMessage(message), 500);
-    }
+    this.http.post( `http://127.0.0.1:5000/query`,{query: this.currentMessage}).subscribe({
+      next: (response:any) => {
+        console.log(response)
+        var ans = this.extractAfterThink(response.answer)
+        this.messages.push({ text: response.query, sender: 'user' });
+        this.replyToMessage(ans);
+      }
+    });
+    // const message = this.currentMessage.trim();
+    // if (message) {
+    //   if (!this.startedChat) this.startedChat = true;
+    //   this.messages.push({ text: message, sender: 'user' });
+    //   this.currentMessage = '';
+    //   setTimeout(() => this.replyToMessage(message), 500);
+    // }
   }
 
   replyToMessage(msg: string) {
-    const lower = msg.toLowerCase();
-    let reply = "I'm not sure how to answer that yet.";
-    if (lower.includes("hello") || lower.includes("hi")) {
-      reply = "Hey there! How can I assist you today?";
-    }
+    // const lower = msg.toLowerCase();
+    let reply = msg;
+    // if (lower.includes("hello") || lower.includes("hi")) {
+    //   reply = "Hey there! How can I assist you today?";
+    // }
     this.messages.push({ text: reply, sender: 'bot' });
+    console.log(this.messages)
   }
 
   ngAfterViewChecked(): void {
@@ -58,4 +69,14 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
       } catch (err) { }
     }
   }
+
+   extractAfterThink(answer: string) {
+  const closingTag = "</think>";
+  const index = answer.indexOf(closingTag);
+  if (index !== -1) {
+    return answer.substring(index + closingTag.length).trim();
+  } else {
+    return "No </think> tag found.";
+  }
+}
 }

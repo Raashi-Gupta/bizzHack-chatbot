@@ -1,11 +1,11 @@
-<div class="row chat-page" [ngClass]="{ 'centered': !startedChat }">
+<div class="row chat-page">
   <div class="col-11">
     <div class="chat-container">
-      <div *ngIf="!startedChat" class="initial-greeting">
+      <!-- <div *ngIf="false" class="initial-greeting">
         <h2>Hello! How can I help you today?</h2>
-      </div>
-      <div class="chat-box" #chatBox *ngIf="startedChat">
-        <div class="message" *ngFor="let msg of messages" [ngClass]="msg.sender">
+      </div> -->
+      <div class="chat-box" #chatBox >
+        <div class="message" *ngFor="let msg of messages">
           {{ msg.text }}
         </div>
       </div>
