@@ -1,22 +1,22 @@
 .header-container{
-    background-color: white;
-    border-bottom: 1px solid #c4c4c4;
-    padding: 12px;
-    display: flex;
-    justify-content: space-between;
+  background-color: white;
+  border-bottom: 1px solid #c4c4c4;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
 }
 .title-header{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 24px;
-    font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 24px;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 .title{
-    color: rgb(96, 0, 0);
-    font-weight: 600;
-    display: flex;
-    gap: 4px;
+  color: rgb(22, 0, 96);
+  font-weight: 600;
+  display: flex;
+  gap: 4px;
 }
 .p-dropdown.pill-dropdown {
   background-color: #dedede;     
@@ -60,7 +60,7 @@
     }
   }
 
-  .dropdown-menu {
+  .dropdown-menu1 {
     position: absolute;
     top: 100%;
     right: 0;

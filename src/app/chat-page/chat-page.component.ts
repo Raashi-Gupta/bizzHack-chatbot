@@ -12,9 +12,11 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './chat-page.component.scss'
 })
 export class ChatPageComponent implements AfterViewChecked, OnInit {
-  messages: { text: string, sender: 'user' | 'bot' }[] = [];
+  messages: { id: number,text: string, sender: 'user' | 'bot' }[] = [];
   currentMessage: string = '';
   startedChat = false;
+  openDropdownMsgId: number | null = null; // Use message ID, not index
+  selectedLanguages: { [msgId: number]: string } = {};
 
   @ViewChild('chatBox') chatBox!: ElementRef;
 
@@ -28,11 +30,13 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
     });
   }
 
+  private nextId = 1;
+
   sendMessage() {
     const message = this.currentMessage.trim();
     if (message) {
       if (!this.startedChat) this.startedChat = true;
-      this.messages.push({ text: message, sender: 'user' });
+      this.messages.push({ text: message, sender: 'user', id: this.nextId++ });
       this.currentMessage = '';
       setTimeout(() => this.replyToMessage(message), 500);
     }
@@ -44,8 +48,9 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
     if (lower.includes("hello") || lower.includes("hi")) {
       reply = "Hey there! How can I assist you today?";
     }
-    this.messages.push({ text: reply, sender: 'bot' });
+    this.messages.push({ text: reply, sender: 'bot', id: this.nextId++ });
   }
+
 
   ngAfterViewChecked(): void {
     this.scrollToBottom();
@@ -58,4 +63,39 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
       } catch (err) { }
     }
   }
+
+  onLanguageChange(event: Event, msg: any): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedLang = selectElement.value;
+    this.translateMessage(msg, selectedLang);
+  }
+
+  toggleDropdown(msgId: number) {
+    if (this.openDropdownMsgId === msgId) {
+      this.openDropdownMsgId = null;
+    } else {
+      this.openDropdownMsgId = msgId;
+    }
+  }
+
+  selectLanguage(msgId: number, language: string) {
+    this.selectedLanguages[msgId] = language;
+    this.openDropdownMsgId = null;
+
+    const message = this.messages.find(m => m.id === msgId && m.sender === 'bot');
+    if (message) {
+      this.translateMessage(message, language);
+    }
+  }
+
+  translateMessage(msg: any, lang: string): void {
+    if (lang === 'French') {
+      msg.text = 'Bonjour!';       
+    } else if (lang === 'Hindi') {
+      msg.text = 'नमस्ते!';      
+    } else {
+      msg.text = 'Hello!';        
+    }
+  }
+
 }

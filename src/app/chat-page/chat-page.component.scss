@@ -113,3 +113,93 @@
   border-radius: 30px;
   margin: 0px 2px;
 }
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* aligns selector with message */
+}
+
+.language-selector {
+  font-size: 12px;
+  color: #999;
+  margin-top: 4px;
+  margin-left: 20px; /* align slightly with message bubble */
+}
+
+.language-selector label,
+.language-selector select {
+  font-size: 12px;
+  color: #999;
+}
+
+.message-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  margin-left: 20px;
+  font-size: 14px;
+  color: #999;
+}
+
+.download-button {
+  background: none;
+  border: none;
+  color: #999;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+
+.download-button:hover {
+  color: #210073;
+}
+
+.download-button .pi {
+  font-size: 14px;
+}
+
+.divider {
+  width: 2px;
+  height: 18px;
+  background-color: #ccc;
+  margin: 0 2px;
+}
+
+.language-dropdown-container {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  cursor: pointer;
+}
+.language-dropdown-container:hover {
+  color: #210073;
+}
+
+.language-dropdown-container .pi {
+  font-size: 14px;
+}
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-width: 120px;
+}
+
+.dropdown div {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown div:hover {
+  background-color: #f0f0f0;
+}

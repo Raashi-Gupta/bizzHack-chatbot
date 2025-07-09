@@ -1,29 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // <-- IMPORT THIS
 import { DropdownModule } from 'primeng/dropdown';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [FormsModule, DropdownModule],
+  imports: [FormsModule, DropdownModule, CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit {
 
-  languages = [
-    { label: 'English', value: 'en' },
-    { label: 'Hindi - हिन्दी', value: 'hi' },
-    { label: 'Tamil - தமிழ்', value: 'ta' },
-    { label: 'Telugu - తెలుగు', value: 'te' },
-    { label: 'Bengali - বাংলা', value: 'bn' },
-    { label: 'Gujarati - ગુજરાતી', value: 'gu' },
-    { label: 'Kannada - ಕನ್ನಡ', value: 'kn' },
-    { label: 'Malayalam - മലയാളം', value: 'ml' },
-    { label: 'Marathi - मराठी', value: 'mr' },
-    { label: 'Punjabi - ਪੰਜਾਬੀ', value: 'pa' },
-    { label: 'Urdu - اردو', value: 'ur' }
-  ];
-  selectedLanguage = 'en';
   isOpen = false;
   userName: string = '';
 
@@ -36,10 +23,11 @@ export class HeaderComponent implements OnInit {
 
   toggleDropdown() {
     this.isOpen = !this.isOpen;
+    console.log('isOpen:', this.isOpen);
   }
 
   closeDropdown() {
-    setTimeout(() => (this.isOpen = false), 200); // delay to allow click
+    setTimeout(() => (this.isOpen = false), 200);
   }
 
   navigate(action: string) {

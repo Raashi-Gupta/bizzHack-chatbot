@@ -5,25 +5,17 @@
       <div style="font-weight: 500; color: rgb(7, 7, 136);">Saint-Gobain</div> DataBot</div>
   </div>
   <div class="language-dropdown">
-    <p-dropdown
-      [options]="languages"
-      [(ngModel)]="selectedLanguage"
-      optionLabel="label"
-      placeholder="Select Language"
-      styleClass="pill-dropdown"
-    ></p-dropdown>
-    <div class="user-dropdown" (click)="toggleDropdown()" tabindex="0" (blur)="closeDropdown()">
+    <div class="user-dropdown" (click)="toggleDropdown()" >
       <div class="user-avatar">
         <i class="pi pi-user"></i>
         <span class="username">{{userName}}</span>
         <i class="pi pi-chevron-down"></i>
       </div>
 
-      <ul *ngIf="isOpen" class="dropdown-menu">
+      <div *ngIf="isOpen" class="dropdown-menu1">
         <li (click)="navigate('profile')">👤 Profile</li>
-        <li (click)="navigate('settings')">⚙️ Settings</li>
         <li (click)="navigate('logout')">🚪 Logout</li>
-      </ul>
+      </div>
     </div>
   </div>
 </div>
