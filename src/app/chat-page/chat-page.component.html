@@ -26,48 +26,47 @@
           </div>
         </div>
       </div> -->
-        <div class="chat-box" #chatBox *ngIf="startedChat">
-          <ng-container *ngFor="let msg of messages">
-            <div class="message-wrapper">
-              <div class="message" [ngClass]="msg.sender">
-                {{ msg.text }}
-              </div>
-
-              <div *ngIf="msg.sender === 'bot'" class="message-actions">
-                <div class="language-dropdown-container">
-                  <label (click)="toggleDropdown(msg.id)">
-                    {{ selectedLanguages[msg.id] || 'Change language' }}
-                  </label>
-                  <i class="pi pi-globe"></i>
-
-                  <div *ngIf="openDropdownMsgId === msg.id" class="dropdown">
-                    <div (click)="selectLanguage(msg.id, 'English')">English</div>
-                    <div (click)="selectLanguage(msg.id, 'French')">French</div>
-                    <div (click)="selectLanguage(msg.id, 'Hindi')">Hindi</div>
-                  </div>
-                </div>
-
-                <div class="divider"></div>
-
-                <button class="download-button">
-                  <div>Download Excel</div>
-                  <i class="pi pi-file-excel"></i>
-                </button>
-              </div>
+      <div class="chat-box" #chatBox *ngIf="startedChat">
+        <ng-container *ngFor="let msg of messages">
+          <div class="message-wrapper">
+            <div class="message" [ngClass]="msg.sender">
+              {{ msg.text }}
             </div>
-          </ng-container>
-        </div>
+
+            <div *ngIf="msg.sender === 'bot'" class="message-actions">
+              <div class="language-dropdown-container">
+                <label (click)="toggleDropdown(msg.id)">
+                  {{ selectedLanguages[msg.id] || 'Change language' }}
+                </label>
+                <i class="pi pi-globe"></i>
+
+                <div *ngIf="openDropdownMsgId === msg.id" class="dropdown">
+                  <div (click)="selectLanguage(msg.id, 'English')">English</div>
+                  <div (click)="selectLanguage(msg.id, 'French')">French</div>
+                  <div (click)="selectLanguage(msg.id, 'Hindi')">Hindi</div>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <button class="download-button">
+                <div>Download Excel</div>
+                <i class="pi pi-file-excel"></i>
+              </button>
+            </div>
+          </div>
+        </ng-container>
         <div *ngIf="showLoader" style="text-align: center;">
-          <p-progress-spinner strokeWidth="8" fill="transparent" [style]="{ width: '50px', height: '50px' }" />
+        <p-progress-spinner strokeWidth="8" fill="transparent" [style]="{ width: '50px', height: '50px' }" />
         </div>
       </div>
-      <div class="input-box">
-        <div class="input-wrapper">
-          <input [(ngModel)]="currentMessage" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
-          <button pButton type="button" icon="pi pi-send" iconPos="right" class="send-button-inside"
-            (click)="sendMessage()">
-          </button>
-        </div>
+    </div>
+    <div class="input-box">
+      <div class="input-wrapper">
+        <input [(ngModel)]="currentMessage" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
+        <button pButton type="button" icon="pi pi-send" iconPos="right" class="send-button-inside"
+          (click)="sendMessage()">
+        </button>
       </div>
     </div>
   </div>
