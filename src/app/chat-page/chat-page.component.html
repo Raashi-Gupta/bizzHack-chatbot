@@ -1,19 +1,27 @@
-<div class="row chat-page">
-  <div class="col-11">
+<div class="row">
+  <div class="col-12">
+    <app-page-header [pageTitle]="'Chat'"></app-page-header>
+  </div>
+</div>
+<div class="row chat-page" [ngClass]="{ 'centered': !startedChat }">
+  <div class="col-12">
     <div class="chat-container">
-      <!-- <div *ngIf="false" class="initial-greeting">
+      <div *ngIf="!startedChat" class="initial-greeting">
         <h2>Hello! How can I help you today?</h2>
-      </div> -->
-      <div class="chat-box" #chatBox >
-        <div class="message" *ngFor="let msg of messages">
+      </div>
+      <div class="chat-box" #chatBox *ngIf="startedChat">
+        <div class="message" *ngFor="let msg of messages" [ngClass]="msg.sender">
           {{ msg.text }}
+        </div>
+        <div *ngIf="showLoader" style="text-align: center;">
+          <p-progress-spinner strokeWidth="8" fill="transparent" [style]="{ width: '50px', height: '50px' }" />
         </div>
       </div>
       <div class="input-box">
         <div class="input-wrapper">
           <input [(ngModel)]="currentMessage" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
-           <button pButton type="button" icon="pi pi-send" iconPos="right" class= "send-button-inside" 
-           (click)="sendMessage()">
+          <button pButton type="button" icon="pi pi-send" iconPos="right" class="send-button-inside"
+            (click)="sendMessage()">
           </button>
         </div>
       </div>

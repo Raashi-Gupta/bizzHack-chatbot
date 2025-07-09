@@ -4,20 +4,23 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { PageHeaderComponent } from '../page-header/page-header.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-chat-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule],
+  imports: [CommonModule, FormsModule, ButtonModule, PageHeaderComponent, ProgressSpinnerModule],
   templateUrl: './chat-page.component.html',
   styleUrl: './chat-page.component.scss'
 })
 export class ChatPageComponent implements AfterViewChecked, OnInit {
-  messages: { text: string, sender: 'user' | 'bot' }[] = [];
-  currentMessage: string = '?';
+  messages: { text: string, sender: 'user' | 'bot' | 'error' }[] = [];
+  currentMessage: string = '';
   startedChat = false;
 
   @ViewChild('chatBox') chatBox!: ElementRef;
+  showLoader: boolean = false;
 
   constructor(private route:ActivatedRoute, private http: HttpClient){}
 
@@ -30,30 +33,30 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
     });
   }
 
+  selectedOption = '';
+  options = ['Support', 'Sales', 'Feedback', 'Technical', 'Billing'];
+
   sendMessage() {
+    this.startedChat = true;
+    this.showLoader = true;
+    this.messages.push({ text: this.currentMessage, sender: 'user' });
+    this.currentMessage = '';
     this.http.post( `http://127.0.0.1:5000/query`,{query: this.currentMessage}).subscribe({
       next: (response:any) => {
         console.log(response)
         var ans = this.extractAfterThink(response.answer)
-        this.messages.push({ text: response.query, sender: 'user' });
         this.replyToMessage(ans);
+        this.showLoader = false;
+      }, error: (error: any) => {
+        console.log(error);
+        this.messages.push({ text: 'An error occured. Please try again.', sender :'error' });
+        this.showLoader = false;
       }
     });
-    // const message = this.currentMessage.trim();
-    // if (message) {
-    //   if (!this.startedChat) this.startedChat = true;
-    //   this.messages.push({ text: message, sender: 'user' });
-    //   this.currentMessage = '';
-    //   setTimeout(() => this.replyToMessage(message), 500);
-    // }
   }
 
   replyToMessage(msg: string) {
-    // const lower = msg.toLowerCase();
     let reply = msg;
-    // if (lower.includes("hello") || lower.includes("hi")) {
-    //   reply = "Hey there! How can I assist you today?";
-    // }
     this.messages.push({ text: reply, sender: 'bot' });
     console.log(this.messages)
   }

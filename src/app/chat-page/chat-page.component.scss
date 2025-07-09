@@ -1,7 +1,6 @@
 .chat-page {
   display: flex;
   justify-content: center;
-  background-color: #f8f8f8;
   height: 100vh;
 
   &.centered {
@@ -13,7 +12,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 90vh;
+  height: 80vh;
   margin: 0 auto;
   overflow: hidden;
   justify-content: flex-end;
@@ -66,12 +65,14 @@
   align-self: flex-end;
 }
 
-.bot {
+.bot, .error {
   background: #e2ecff;
   color: #333;
   align-self: flex-start;
 }
-
+.error{
+  color: #dc3545;
+}
 .input-box {
   padding: 15px;
   background-color: #f8f8f8;

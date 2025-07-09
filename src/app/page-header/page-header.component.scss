@@ -1,0 +1,28 @@
+.chat-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.operation-dropdown {
+  width: 220px;
+  font-size: 0.95rem;
+
+  ::ng-deep .p-dropdown {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 0.25rem 0.5rem;
+  }
+
+  ::ng-deep .p-dropdown-label {
+    color: #495057;
+  }
+
+  ::ng-deep .p-dropdown-item {
+    font-size: 0.9rem;
+  }
+}

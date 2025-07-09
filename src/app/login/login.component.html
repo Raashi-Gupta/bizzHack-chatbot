@@ -1,11 +1,12 @@
 <div class="d-flex flex-column flex-md-row min-vh-100 w-100">
 
-    <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center text-white" style="flex-direction: column; background-color: rgb(212 234 245);">
+    <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center text-white"
+        style="flex-direction: column; background-color: rgb(212 234 245);">
         <span class="projectName">DataBot</span>
-        <img src="assets/sglogo.png" alt="illustration" class="img-fluid" style="max-height: 100px;"/>
+        <img src="assets/sglogo.png" alt="illustration" class="img-fluid" style="max-height: 100px;" />
     </div>
 
-    
+
     <div class="col-12 col-md-6 d-flex flex-column justify-content-center px-5">
         <div class="w-100" style="max-width: 500px;">
             <h2 class="fw-bold mb-2">Login to enjoy,</h2>
@@ -14,16 +15,25 @@
             <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
                 <div class="mb-3">
                     <label>Email Address</label>
-                    <input pInputText type="email" formControlName="email" class="form-control" />
+                    <input pInputText type="email" formControlName="email" class="form-control"
+                        [ngClass]="{'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}" />
+                    <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="text-danger">
+                        <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</div>
+                        <div *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email.</div>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label>Password</label>
-                    <input pInputText type="password" formControlName="password" class="form-control" />
+                    <input pInputText type="password" formControlName="password" class="form-control"
+                        [ngClass]="{'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}" />
+                    <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+                        class="text-danger">
+                        <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</div>
+                    </div>
                 </div>
                 <button pButton label="Login" type="submit" class="w-100 p-button-primary p-button-sm"></button>
             </form>
             <hr />
         </div>
     </div>
-
 </div>

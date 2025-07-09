@@ -1,0 +1,14 @@
+<div class="chat-header d-flex justify-content-between align-items-center px-4 py-2 shadow-sm bg-white border-bottom">
+  <h5 class="m-0 fw-semibold text-primary-emphasis">{{pageTitle}}</h5>
+
+  <p-select 
+    [options]="operationOption"
+    [(ngModel)]="currentOperation"
+    (onChange)="onOptionChange($event.value)"
+    optionLabel = "name"
+    placeholder="Select Operation"
+    optionLabel="name"
+    optionValue="name"
+    class="operation-dropdown">
+  </p-select>
+</div>

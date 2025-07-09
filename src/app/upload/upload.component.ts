@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { PageHeaderComponent } from '../page-header/page-header.component';
 
 @Component({
   selector: 'app-upload',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PageHeaderComponent],
   templateUrl: './upload.component.html',
   styleUrl: './upload.component.scss',
 })
