@@ -15,7 +15,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   styleUrl: './chat-page.component.scss'
 })
 export class ChatPageComponent implements AfterViewChecked, OnInit {
-  messages: { id: number,text: string, sender: 'user' | 'bot' }[] = [];
+  messages: { id: number,text: string, sender: 'user' | 'bot' | 'error' }[] = [];
   currentMessage: string = '';
   startedChat = false;
   openDropdownMsgId: number | null = null; // Use message ID, not index
@@ -43,7 +43,7 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
   sendMessage() {
     this.startedChat = true;
     this.showLoader = true;
-    this.messages.push({ text: this.currentMessage, sender: 'user' });
+    this.messages.push({id:this.nextId, text: this.currentMessage, sender: 'user' });
     this.currentMessage = '';
     this.http.post( `http://127.0.0.1:5000/query`,{query: this.currentMessage}).subscribe({
       next: (response:any) => {
@@ -53,7 +53,7 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
         this.showLoader = false;
       }, error: (error: any) => {
         console.log(error);
-        this.messages.push({ text: 'An error occured. Please try again.', sender :'error' });
+        this.messages.push({id:this.nextId, text: 'An error occured. Please try again.', sender :'error' });
         this.showLoader = false;
       }
     });
@@ -61,7 +61,7 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
 
   replyToMessage(msg: string) {
     let reply = msg;
-    this.messages.push({ text: reply, sender: 'bot' });
+    this.messages.push({id:this.nextId, text: reply, sender: 'bot' });
     console.log(this.messages)
   }
 
