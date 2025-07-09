@@ -15,9 +15,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   styleUrl: './chat-page.component.scss'
 })
 export class ChatPageComponent implements AfterViewChecked, OnInit {
-  messages: { text: string, sender: 'user' | 'bot' | 'error' }[] = [];
+  messages: { id: number,text: string, sender: 'user' | 'bot' }[] = [];
   currentMessage: string = '';
   startedChat = false;
+  openDropdownMsgId: number | null = null; // Use message ID, not index
+  selectedLanguages: { [msgId: number]: string } = {};
 
   @ViewChild('chatBox') chatBox!: ElementRef;
   showLoader: boolean = false;
@@ -32,6 +34,8 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
       this.sendMessage();}
     });
   }
+
+  private nextId = 1;
 
   selectedOption = '';
   options = ['Support', 'Sales', 'Feedback', 'Technical', 'Billing'];
@@ -60,6 +64,7 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
     this.messages.push({ text: reply, sender: 'bot' });
     console.log(this.messages)
   }
+
 
   ngAfterViewChecked(): void {
     this.scrollToBottom();
