@@ -29,7 +29,8 @@ export class SidebarComponent implements OnInit {
   updateMenuItems() {
     this.menuItems = [{ label: 'Home', icon: 'pi pi-home', route: '/home' },
     { label: `Most Searched`, icon: 'pi pi-question-circle', route: '/most-searched', disabled: !this.isBusinessSelected },
-    { label: 'Upload a file', icon: 'pi pi-upload', route: '/upload', disabled: !this.isBusinessSelected },]
+    // { label: 'Upload a file', icon: 'pi pi-upload', route: '/upload', disabled: !this.isBusinessSelected },
+  ]
   }
 
   toggleSidebar() {

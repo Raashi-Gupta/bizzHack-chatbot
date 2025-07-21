@@ -20,19 +20,19 @@ import { TabViewModule } from 'primeng/tabview';
 export class PageHeaderComponent implements OnInit {
   @Input() pageTitle :string = '';
   operationOption = operationList
-  currentOperation: string | null = null;
+  selectedBusiness: string | null = null;
   visible: boolean = false;
   activeTabIndex: number = 0;
   uploadUrl: string = '';
-
+  businessName: string = '';
 
   ngOnInit(): void {
     
-    this.currentOperation = localStorage.getItem('currentOperation');
-    if(!this.currentOperation){
-      this.currentOperation =  this.operationOption[0].name;
-      localStorage.setItem("currentOperation",this.currentOperation);
-    }
+    this.selectedBusiness = localStorage.getItem('selectedBusiness');
+    // if(!this.selectedBusiness){
+    //   // this.selectedBusiness =  this.operationOption[0].name;
+    //   // localStorage.setItem("currentOperation",this.selectedBusiness);
+    // }
   }
 
 

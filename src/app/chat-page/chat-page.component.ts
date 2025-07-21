@@ -42,17 +42,19 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
     this.startedChat = true;
     this.showLoader = true;
     this.messages.push({ id: this.nextId, text: this.currentMessage, sender: 'user' });
-    this.currentMessage = '';
-    this.http.post(`http://127.0.0.1:5000/query`, { query: this.currentMessage }).subscribe({
+    console.log(this.messages.join(','));
+    this.http.post(`http://127.0.0.1:5000/query`, { query: this.currentMessage, namespace:"yash" }).subscribe({
       next: (response: any) => {
         console.log(response)
         var ans = this.extractAfterThink(response.answer)
         this.replyToMessage(ans);
         this.showLoader = false;
+        this.currentMessage = '';
       }, error: (error: any) => {
         console.log(error);
         this.messages.push({ id: this.nextId, text: 'An error occured. Please try again.', sender: 'error' });
         this.showLoader = false;
+        this.currentMessage = '';
       }
     });
   }

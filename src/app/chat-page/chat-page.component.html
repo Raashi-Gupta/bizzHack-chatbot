@@ -30,7 +30,7 @@
         <ng-container *ngFor="let msg of messages">
           <div class="message-wrapper">
             <div class="message" [ngClass]="msg.sender">
-              {{ msg.text }}
+              <p [innerHTML]="msg.text"></p>
             </div>
 
             <div *ngIf="msg.sender === 'bot'" class="message-actions">

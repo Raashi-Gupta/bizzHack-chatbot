@@ -1,14 +1,16 @@
 <div class="header-container">
-  <div class="title-header">
+  <div class="title-header w-100" style="justify-content: space-between;">
+    <div style="display: flex; gap: 10px;">
     <img src="assets/layout/sg-logo.svg" style="width: 74px;height: 32px;"/>
     <div class="title">
-      <div style="font-weight: 500; color: rgb(7, 7, 136);">Saint-Gobain</div> DataBot</div>
+      <div style="font-weight: 500; color: rgb(7, 7, 136);">SG Chatbot</div>
+  </div>
   </div>
   <div class="language-dropdown">
-    <div class="user-dropdown" (click)="toggleDropdown()" >
+    <div class="user-dropdown"  >
       <div class="user-avatar">
         <i class="pi pi-user"></i>
-        <span class="username">{{userName}}</span>
+        <span class="username" style="font-size: 20px;">{{userName}}</span>
         <i class="pi pi-chevron-down"></i>
       </div>
 
