@@ -15,11 +15,12 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   styleUrl: './chat-page.component.scss'
 })
 export class ChatPageComponent implements AfterViewChecked, OnInit {
-  messages: { id: number, text: string, sender: 'user' | 'bot' | 'error' }[] = [];
+  messages: { id: number, text: string, sender: 'user' | 'bot' | 'error', isStreaming?: boolean }[] = [];
   currentMessage: string = '';
   startedChat = false;
-  openDropdownMsgId: number | null = null; // Use message ID, not index
+  openDropdownMsgId: number | null = null;
   selectedLanguages: { [msgId: number]: string } = {};
+  useStreaming = true; // Toggle between streaming and non-streaming
 
   @ViewChild('chatBox') chatBox!: ElementRef;
   showLoader: boolean = false;
@@ -38,33 +39,174 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
 
   private nextId = 1;
   selectedOption = '';
+
   sendMessage() {
+    if (!this.currentMessage.trim()) return;
+    
     this.startedChat = true;
     this.showLoader = true;
-    this.messages.push({ id: this.nextId, text: this.currentMessage, sender: 'user' });
-    console.log(this.messages.join(','));
-    this.http.post(`http://127.0.0.1:5000/query`, { query: this.currentMessage, namespace:"yash" }).subscribe({
-      next: (response: any) => {
-        console.log(response)
-        var ans = this.extractAfterThink(response.answer)
-        this.replyToMessage(ans);
-        this.showLoader = false;
-        this.currentMessage = '';
-      }, error: (error: any) => {
-        console.log(error);
-        this.messages.push({ id: this.nextId, text: 'An error occured. Please try again.', sender: 'error' });
-        this.showLoader = false;
-        this.currentMessage = '';
-      }
+    
+    const userMessageId = this.nextId++;
+    this.messages.push({ 
+      id: userMessageId, 
+      text: this.currentMessage, 
+      sender: 'user' 
     });
+
+    const userMessage = this.currentMessage;
+    this.currentMessage = '';
+
+    this.sendStreamingMessage(userMessage);
+    
   }
+
+  private sendStreamingMessage(message: string) {
+    const botMessageId = this.nextId++;
+    
+    // Add empty bot message that will be populated with streaming content
+    this.messages.push({ 
+      id: botMessageId, 
+      text: '', 
+      sender: 'bot',
+      isStreaming: true
+    });
+
+    // Create EventSource-like functionality using fetch
+    this.streamResponse(message, botMessageId);
+  }
+
+  private async streamResponse(message: string, botMessageId: number) {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/query', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          query: message, 
+          namespace: "yash" 
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('Failed to get response reader');
+      }
+
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (done) {
+          break;
+        }
+
+        // Decode the chunk and add to buffer
+        buffer += decoder.decode(value, { stream: true });
+        
+        // Process complete lines
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || ''; // Keep incomplete line in buffer
+
+        for (const line of lines) {
+          if (line.trim() === '') continue;
+          
+          // Handle SSE format
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6); // Remove 'data: ' prefix
+            
+            if (data === '[DONE]') {
+              this.finishStreaming(botMessageId);
+              return;
+            }
+
+            try {
+              const parsed = JSON.parse(data);
+              
+              if (parsed.status === 'start') {
+                // Starting to receive content
+                
+                continue;
+              } else if (parsed.status === 'complete') {
+                // Finished receiving content
+                this.finishStreaming(botMessageId);
+                return;
+              } else if (parsed.token) {
+                // Append token to the bot message
+                this.showLoader = false;
+                this.appendToMessage(botMessageId, parsed.token);
+              } else if (parsed.error) {
+                // Handle error
+                this.handleStreamingError(botMessageId, parsed.error);
+                return;
+              }
+            } catch (e) {
+              // If not JSON, treat as plain text token
+              if (data.trim()) {
+                this.appendToMessage(botMessageId, data);
+              }
+            }
+          } else if (line.trim()) {
+            // Handle plain text streaming
+            this.appendToMessage(botMessageId, line);
+          }
+        }
+      }
+
+      this.finishStreaming(botMessageId);
+
+    } catch (error) {
+      console.error('Streaming error:', error);
+      this.handleStreamingError(botMessageId, 'Failed to get streaming response');
+    }
+  }
+
+  private appendToMessage(messageId: number, token: string) {
+    const messageIndex = this.messages.findIndex(m => m.id === messageId);
+    if (messageIndex !== -1) {
+      this.messages[messageIndex].text += token;
+      // Trigger change detection and scroll
+      setTimeout(() => this.scrollToBottom(), 0);
+    }
+  }
+
+  private finishStreaming(messageId: number) {
+    const messageIndex = this.messages.findIndex(m => m.id === messageId);
+    if (messageIndex !== -1) {
+      this.messages[messageIndex].isStreaming = false;
+      // Process the final text (remove <think> tags if present)
+      const finalText = this.extractAfterThink(this.messages[messageIndex].text);
+      this.messages[messageIndex].text = finalText;
+    }
+    this.showLoader = false;
+  }
+
+  private handleStreamingError(messageId: number, error: string) {
+    const messageIndex = this.messages.findIndex(m => m.id === messageId);
+    if (messageIndex !== -1) {
+      this.messages[messageIndex].text = `Error: ${error}`;
+      this.messages[messageIndex].sender = 'error';
+      this.messages[messageIndex].isStreaming = false;
+    }
+    this.showLoader = false;
+  }
+
+  
 
   replyToMessage(msg: string) {
-    let reply = msg;
-    this.messages.push({ id: this.nextId, text: reply, sender: 'bot' });
-    console.log(this.messages)
+    this.messages.push({ 
+      id: this.nextId++, 
+      text: msg, 
+      sender: 'bot' 
+    });
+    console.log(this.messages);
   }
-
 
   ngAfterViewChecked(): void {
     this.scrollToBottom();
@@ -111,13 +253,25 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
       msg.text = 'Hello!';
     }
   }
-  extractAfterThink(answer: string) {
+
+  extractAfterThink(answer: string): string {
     const closingTag = "</think>";
     const index = answer.indexOf(closingTag);
     if (index !== -1) {
       return answer.substring(index + closingTag.length).trim();
     } else {
-      return "No </think> tag found.";
+      return answer || "No response received.";
     }
+  }
+
+  // Toggle between streaming and non-streaming modes
+  
+
+  // Method to clear chat history
+  
+
+  // TrackBy function for better performance with ngFor
+  trackByMessageId(index: number, message: any): number {
+    return message.id;
   }
 }
