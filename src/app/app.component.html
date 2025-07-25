@@ -3,10 +3,10 @@
   <app-header></app-header>
   </div>
   <div class="d-flex app-content">
-    <div class="app-sidebar" *ngIf="isLoggedIn">
+    <div class="app-sidebar d-none d-md-block" *ngIf="isLoggedIn">
     <app-sidebar></app-sidebar>
     </div>
-    <div class="flex-grow-1 bg-light">
+    <div class="flex-grow-1 bg-light" style="overflow-y: auto;">
       <router-outlet></router-outlet>
     </div>
   </div>

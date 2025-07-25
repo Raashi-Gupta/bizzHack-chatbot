@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { PageHeaderComponent } from '../page-header/page-header.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { jsPDF } from 'jspdf';
 
 @Component({
   selector: 'app-chat-page',
@@ -15,7 +16,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   styleUrl: './chat-page.component.scss'
 })
 export class ChatPageComponent implements AfterViewChecked, OnInit {
-  messages: { id: number, text: string, sender: 'user' | 'bot' | 'error', isStreaming?: boolean }[] = [];
+  messages: { id: number, text: string, sender: 'user' | 'bot' | 'error', isStreaming?: boolean, suggestions?: string[]; }[] = [];
   currentMessage: string = '';
   startedChat = false;
   openDropdownMsgId: number | null = null;
@@ -24,6 +25,16 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
 
   @ViewChild('chatBox') chatBox!: ElementRef;
   showLoader: boolean = false;
+  loadingSteps: string[] = [
+    'Step 1 of 5: Asking our AI',
+    'Step 2 of 5: Analyzing your request',
+    'Step 3 of 5: Gathering relevant data',
+    'Step 4 of 5: Generating a response',
+    'Step 5 of 5: Finalizing'
+  ];
+  currentLoadingStepIndex = 0;
+  currentLoadingMessage = '';
+  loadingInterval: any;
 
   constructor(private route: ActivatedRoute, private http: HttpClient) { }
 
@@ -44,7 +55,7 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
     if (!this.currentMessage.trim()) return;
     
     this.startedChat = true;
-    this.showLoader = true;
+    this.startCustomLoading();
     
     const userMessageId = this.nextId++;
     this.messages.push({ 
@@ -139,7 +150,7 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
                 return;
               } else if (parsed.token) {
                 // Append token to the bot message
-                this.showLoader = false;
+                this.stopCustomLoading();
                 this.appendToMessage(botMessageId, parsed.token);
               } else if (parsed.error) {
                 // Handle error
@@ -180,12 +191,25 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
     const messageIndex = this.messages.findIndex(m => m.id === messageId);
     if (messageIndex !== -1) {
       this.messages[messageIndex].isStreaming = false;
-      // Process the final text (remove <think> tags if present)
-      const finalText = this.extractAfterThink(this.messages[messageIndex].text);
-      this.messages[messageIndex].text = finalText;
+
+      const fullHtml = this.extractAfterThink(this.messages[messageIndex].text);
+      const suggestions = this.extractSuggestions(fullHtml);
+      const mainAnswerHtml = this.stripSuggestionsFromHtml(fullHtml);
+
+      this.messages[messageIndex].text = mainAnswerHtml;
+
+      if (suggestions.length > 0) {
+        this.messages.push({
+          id: this.nextId++,
+          text: '',
+          sender: 'bot',
+          isStreaming: false,
+          suggestions
+        });
+      }
     }
-    this.showLoader = false;
   }
+
 
   private handleStreamingError(messageId: number, error: string) {
     const messageIndex = this.messages.findIndex(m => m.id === messageId);
@@ -194,7 +218,7 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
       this.messages[messageIndex].sender = 'error';
       this.messages[messageIndex].isStreaming = false;
     }
-    this.showLoader = false;
+    this.stopCustomLoading();
   }
 
   
@@ -210,6 +234,7 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
 
   ngAfterViewChecked(): void {
     this.scrollToBottom();
+    console.log(this.messages);
   }
 
   private scrollToBottom() {
@@ -273,5 +298,70 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
   // TrackBy function for better performance with ngFor
   trackByMessageId(index: number, message: any): number {
     return message.id;
+  }
+
+  extractSuggestions(html: string): string[] {
+  const container = document.createElement('div');
+  container.innerHTML = html;
+  const suggestionElements = container.querySelectorAll('.suggestions li');
+  return Array.from(suggestionElements)
+    .map(el => el.textContent?.trim() || '')
+    .filter(Boolean);
+}
+
+stripSuggestionsFromHtml(html: string): string {
+  const container = document.createElement('div');
+  container.innerHTML = html;
+  const suggestions = container.querySelector('.suggestions');
+  if (suggestions) {
+    suggestions.remove();
+  }
+  return container.innerHTML.trim();
+}
+
+handleSuggestionClick(suggestion: string) {
+  this.currentMessage = suggestion;
+  this.sendMessage();
+}
+
+
+  onSuggestionClick(suggestion: string) {
+    this.currentMessage = suggestion;
+    this.sendMessage();
+  }
+
+  startCustomLoading() {
+    this.showLoader = true;
+    this.currentLoadingStepIndex = 0;
+    this.currentLoadingMessage = this.loadingSteps[0];
+    this.loadingInterval = setInterval(() => {
+      this.currentLoadingStepIndex++;
+      if (this.currentLoadingStepIndex < this.loadingSteps.length) {
+        this.currentLoadingMessage = this.loadingSteps[this.currentLoadingStepIndex];
+      } else {
+        clearInterval(this.loadingInterval);
+      }
+    }, 1500);
+  }
+
+  stopCustomLoading() {
+    this.showLoader = false;
+    clearInterval(this.loadingInterval);
+    this.currentLoadingMessage = '';
+  }
+
+  downloadMessageAsPDF(message: string, id: number) {
+    const cleanText = this.stripHtmlTags(message); 
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+    const lines = doc.splitTextToSize(cleanText, 180); 
+    doc.text(lines, 10, 20);
+    doc.save(`chatbot-response-${id}.pdf`);
+  }
+
+  stripHtmlTags(html: string): string {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
   }
 }

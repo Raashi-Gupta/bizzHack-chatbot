@@ -204,3 +204,14 @@
 .dropdown div:hover {
   background-color: #f0f0f0;
 }
+
+.suggestion-link {
+  color: #1a0dab;
+  text-decoration: underline;
+  cursor: pointer;
+  margin: 4px 0;
+}
+
+.suggestion-link:hover {
+  color: #c61a09;
+}

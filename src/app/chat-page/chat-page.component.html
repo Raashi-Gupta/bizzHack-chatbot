@@ -9,28 +9,19 @@
       <div *ngIf="!startedChat" class="initial-greeting">
         <h2>Hello! How can I help you today?</h2>
       </div>
-      <!-- <div class="chat-box" #chatBox *ngIf="startedChat">
-        <div  *ngFor="let msg of messages"  class="message" [ngClass]="msg.sender" >
-          <div>
-            {{ msg.text }}
-          </div>
-          <div *ngIf="msg.sender === 'bot'" class="language-selector">
-            <label for="lang-{{ msg.id }}">Change language:</label>
-            <select
-              id="lang-{{ msg.id }}"
-              (change)="onLanguageChange($event, msg)"
-            >
-              <option value="en">English</option>
-              <option value="fr">French</option>
-            </select>
-          </div>
-        </div>
-      </div> -->
       <div class="chat-box" #chatBox *ngIf="startedChat">
-        <ng-container *ngFor="let msg of messages">
+        <!-- <ng-container *ngFor="let msg of messages">
           <div class="message-wrapper">
             <div class="message" [ngClass]="msg.sender">
               <p [innerHTML]="msg.text"></p>
+              <div *ngIf="msg.suggestions?.length" class="suggestions">
+                <p><strong>Suggested Follow-ups:</strong></p>
+                <ul>
+                  <li *ngFor="let suggestion of msg.suggestions" (click)="handleSuggestionClick(suggestion)" style="cursor: pointer;">
+                    {{ suggestion }}
+                  </li>
+                </ul>
+              </div>
             </div>
 
             <div *ngIf="msg.sender === 'bot'" class="message-actions">
@@ -48,16 +39,55 @@
               </div>
 
               <div class="divider"></div>
-
-              <button class="download-button">
-                <div>Download Excel</div>
-                <i class="pi pi-file-excel"></i>
+              <button class="download-button" (click)="downloadMessageAsPDF(msg.text, msg.id)">
+                <div>Download PDF</div>
+                <i class="pi pi-file-pdf"></i>
               </button>
             </div>
           </div>
+        </ng-container> -->
+
+        <ng-container *ngFor="let msg of messages">
+          <div class="message-wrapper">
+
+            <div class="message" [ngClass]="msg.sender">
+              <div *ngIf="msg.text" [innerHTML]="msg.text"></div>
+              <div *ngIf="msg.suggestions?.length" class="suggestions">
+                <p><strong>Suggested Follow-ups:</strong></p>
+                <ul>
+                  <li *ngFor="let suggestion of msg.suggestions" (click)="handleSuggestionClick(suggestion)" class="suggestion-link">
+                    {{ suggestion }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div *ngIf="msg.sender === 'bot' && msg.text" class="message-actions">
+              <div class="language-dropdown-container">
+                <label (click)="toggleDropdown(msg.id)">
+                  {{ selectedLanguages[msg.id] || 'Change language' }}
+                </label>
+                <i class="pi pi-globe"></i>
+
+                <div *ngIf="openDropdownMsgId === msg.id" class="dropdown">
+                  <div (click)="selectLanguage(msg.id, 'English')">English</div>
+                  <div (click)="selectLanguage(msg.id, 'French')">French</div>
+                  <div (click)="selectLanguage(msg.id, 'Hindi')">Hindi</div>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+              <button class="download-button" (click)="downloadMessageAsPDF(msg.text, msg.id)">
+                <div>Download PDF</div>
+                <i class="pi pi-file-pdf"></i>
+              </button>
+            </div>
+
+          </div>
         </ng-container>
+
         <div *ngIf="showLoader" style="text-align: center;">
-        <p-progress-spinner strokeWidth="8" fill="transparent" [style]="{ width: '50px', height: '50px' }" />
+            {{ currentLoadingMessage }}...
         </div>
       </div>
     </div>

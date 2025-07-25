@@ -1,23 +1,30 @@
 <div class="header-container">
+
   <div class="title-header w-100" style="justify-content: space-between;">
-    <div style="display: flex; gap: 10px;">
+  <div style="display: flex; gap: 4px; align-items: center;">
+    <div class="mobile-nav-toggle d-md-none" (click)="toggleMobileMenu()">
+      <i class="pi pi-bars" style="font-size: 24px;"></i>
+    </div>
     <img src="assets/layout/sg-logo.svg" style="width: 74px;height: 32px;"/>
-    <div class="title">
-      <div style="font-weight: 500; color: rgb(7, 7, 136);">SG Chatbot</div>
+    <div class="title">SG Chatbot</div>
   </div>
-  </div>
+
   <div class="language-dropdown">
-    <div class="user-dropdown"  >
+    <div class="user-dropdown" (click)="toggleDropdown()" >
       <div class="user-avatar">
         <i class="pi pi-user"></i>
         <span class="username" style="font-size: 20px;">{{userName}}</span>
         <i class="pi pi-chevron-down"></i>
       </div>
-
       <div *ngIf="isOpen" class="dropdown-menu1">
         <li (click)="navigate('profile')">👤 Profile</li>
         <li (click)="navigate('logout')">🚪 Logout</li>
       </div>
     </div>
+  </div>
+  <div *ngIf="showMobileMenu" class="mobile-nav-dropdown d-md-none">
+    <a *ngFor="let item of menuItems" class="mobile-nav-link" [routerLink]="item.route" (click)="toggleMobileMenu()">
+      <i [class]="item.icon"></i> {{ item.label }}
+    </a>
   </div>
 </div>
