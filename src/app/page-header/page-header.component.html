@@ -53,6 +53,7 @@
         multiple
         styleClass="w-full"
         customUpload="true"
+        [disabled]="uploading"
         (onSelect)="onFileSelect($event)"
       />
     </div>
@@ -65,6 +66,7 @@
       severity="danger"
       icon="pi pi-trash"
       class="py-2"
+      [disabled]="uploading"
       (click)="fu.clear()"
     />
     <p-button
@@ -72,6 +74,7 @@
       severity="secondary"
       icon="pi pi-times"
       class="py-2"
+      [disabled]="uploading"
       (click)="visible = false"
     />
     <p-button
@@ -79,55 +82,107 @@
       severity="success"
       icon="pi pi-check"
       class="py-2"
+      [disabled]="uploading"
       (click)="onUploadFileSave()"
     />
   </div>
 </p-tabPanel>
 
  
-    <p-tabPanel header="Upload via URL">
-      <div class="p-4">
-        <label for="url-input" class="font-semibold text-gray-700 mb-2 flex items-center" style="padding-right: 20px;">
-          <i class="pi pi-link mr-2"></i>
-          URL
-        </label>
-         <input
-    pInputText
-    [(ngModel)]="uploadUrl"
-    class="w-full p-3 border border-gray-300 rounded-lg"
-    placeholder="Enter URL here..."
-  />
-      </div>
- 
-      <div style="display: flex;justify-content: flex-end; gap:20px;">
-        <ul *ngIf="linkUrls.length > 0" class="mb-4">
-  <li *ngFor="let url of linkUrls; let i = index" class="flex justify-between items-center border-b py-2">
-    {{ url }}
-    <button pButton icon="pi pi-times" class="p-button-sm p-button-danger" (click)="removeUrl(i)"></button>
-  </li>
-</ul>
+ <p-tabPanel header="Upload via URL" class="upload-panel">
+  <form [formGroup]="form" class="upload-form">
 
-        <p-button
-          label="Cancel"
-          severity="secondary"
+    <label class="upload-label">
+      <i class="pi pi-link"></i>
+      Paste URL(s)
+    </label>
+
+<textarea
+  pInputTextarea
+  rows="5"
+  formControlName="urlInput"
+  placeholder="Enter one or more URLs separated by commas or new lines"
+  class="upload-textarea"
+  [class.invalid]="form.controls['urlInput'].invalid && form.controls['urlInput'].touched"
+></textarea>
+
+<!-- Error message -->
+<div *ngIf="form.controls['urlInput'].errors?.['invalidUrls'] && form.controls['urlInput'].touched" class="p-error mt-2">
+  One or more URLs are invalid. Please enter valid URLs starting with http:// or https://
+</div>
+
+    <div class="url-list">
+      <div
+        *ngFor="let url of addedUrls; let i = index"
+        class="url-item"
+      >
+        <span class="url-text" title="{{ url }}">{{ url }}</span>
+        <button
+          pButton
           icon="pi pi-times"
-          (click)="visible = false"
-          class="py-2"
-        />
-        <p-button
-          label="Upload URL"
-          severity="success"
-          icon="pi pi-check"
-          class="py-2"
-           [disabled]="!uploadUrl"
-          (click)="onUploadUrlSave()"
-        />
+          class="url-remove-button"
+          (click)="removeUrl(i)"
+          type="button"
+          aria-label="Remove URL"
+          pRipple
+        ></button>
       </div>
+      <span *ngIf="addedUrls.length === 0" class="no-urls-text">No URLs added yet</span>
+    </div>
 
-    </p-tabPanel>
+    <div class="button-group">
+      <p-button
+        label="Add URLs"
+        icon="pi pi-plus"
+        [disabled]="form.invalid || !form.value.urlInput?.trim()"
+        (click)="addUrls()"
+        type="button"
+        class="btn add-btn"
+        pRipple
+      ></p-button>
+
+      <p-button
+        label="Clear All"
+        icon="pi pi-trash"
+        severity="danger"
+        [disabled]="addedUrls.length === 0"
+        (click)="clearAll()"
+        type="button"
+        class="btn clear-btn"
+        pRipple
+      ></p-button>
+
+      <p-button
+        label="Cancel"
+        icon="pi pi-times"
+        severity="secondary"
+        (click)="visible = false"
+        type="button"
+        class="btn cancel-btn"
+        pRipple
+      ></p-button>
+
+      <p-button
+        *ngIf="addedUrls.length > 0"
+        label="Submit"
+        icon="pi pi-check"
+        severity="success"
+        (click)="submitUrls()"
+        type="button"
+        class="btn submit-btn"
+        pRipple
+      ></p-button>
+    </div>
+  </form>
+</p-tabPanel>
+
+
+
  
   </p-tabView>
      
 </p-dialog>
  
 </div>
+<p-toast></p-toast>
+

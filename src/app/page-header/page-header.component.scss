@@ -26,3 +26,211 @@
     font-size: 0.9rem;
   }
 }
+
+textarea.p-inputtextarea.invalid {
+  border: 2px solid #dc2626 !important; /* Tailwind's red-600 */
+  box-shadow: 0 0 6px #dc2626 !important;
+}
+
+.p-error {
+  color: #dc2626;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+
+
+ /* Use PrimeNG theme CSS variables for colors */
+.upload-panel {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-2);
+  font-family: var(--font-family);
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.upload-label {
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.upload-textarea {
+ border: 2px solid #6b7280 !important;
+   border-radius: 0.75rem;
+  padding: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--surface-card);
+  color: var(--text-color);
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.07);
+  font-family: var(--font-family-monospace, monospace);
+  resize: none;
+}
+
+.upload-textarea:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 8px var(--primary-color);
+  outline: none;
+  background-color: var(--surface-card);
+}
+
+
+.url-list {
+  max-height: 10rem;
+  overflow-y: auto;
+  padding: 0.75rem 1rem;
+  background: var(--surface-b);
+  border: 1.5px solid var(--surface-border);
+  border-radius: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  box-shadow: inset 0 0 8px rgb(0 0 0 / 0.04);
+}
+
+.url-item {
+  display: flex;
+  align-items: center;
+  background: var(--primary-color);
+  color: var(--primary-color-text);
+  padding: 0.25rem 0.8rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
+  max-width: 17.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.url-text {
+  display: inline-block;
+  max-width: 400px;       /* max width so it doesn't grow too big */
+  min-width: 80px;        /* minimum width */
+  padding: 0.25rem 0.5rem;
+  overflow-wrap: break-word; /* wrap long words */
+  word-break: break-word;
+  white-space: normal;    /* allow wrapping */
+  font-size: 0.875rem;
+  color: var(--primary-color);
+  cursor: pointer;
+  user-select: all;
+}
+
+
+.url-remove-button {
+  background: transparent !important;
+  border: none !important;
+  color: var(--primary-color-text) !important;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.url-remove-button:hover {
+  color: var(--error-color) !important;
+}
+
+/* No URLs text */
+.no-urls-text {
+  color: var(--text-secondary-color);
+  font-style: italic;
+  font-size: 0.9rem;
+  width: 100%;
+  text-align: center;
+  padding-top: 0.75rem;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-weight: 600 !important;
+  border-radius: 0.75rem !important;
+  padding-left: 1.25rem !important;
+  padding-right: 1.25rem !important;
+  box-shadow: var(--shadow-1);
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.add-btn {
+  background-color: var(--primary-color) !important;
+  border: none !important;
+  color: var(--primary-color-text) !important;
+}
+
+.add-btn:hover:not(:disabled) {
+  background-color: var(--primary-color-hover) !important;
+  box-shadow: var(--shadow-2);
+}
+
+.clear-btn.p-button-danger {
+  background-color: var(--error-color) !important;
+  border: none !important;
+  color: var(--primary-color-text) !important;
+}
+
+.clear-btn.p-button-danger:hover:not(:disabled) {
+  background-color: var(--error-color-hover) !important;
+  box-shadow: var(--shadow-2);
+}
+
+.cancel-btn {
+  background-color: var(--surface-border) !important;
+  border: none !important;
+  color: var(--text-color) !important;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background-color: var(--surface-hover) !important;
+  box-shadow: var(--shadow-2);
+}
+
+.submit-btn {
+  background-color: var(--success-color) !important;
+  border: none !important;
+  color: var(--primary-color-text) !important;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: var(--success-color-hover) !important;
+  box-shadow: var(--shadow-2);
+}
+
+button:disabled, button.p-disabled {
+  cursor: not-allowed !important;
+  opacity: 0.5 !important;
+  box-shadow: none !important;
+}
+
+/* Scrollbar for url-list */
+.url-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.url-list::-webkit-scrollbar-track {
+  background: var(--surface-b);
+  border-radius: 8px;
+}
+
+.url-list::-webkit-scrollbar-thumb {
+  background: var(--surface-border);
+  border-radius: 8px;
+}
+
+.url-list::-webkit-scrollbar-thumb:hover {
+  background: var(--surface-hover);
+}

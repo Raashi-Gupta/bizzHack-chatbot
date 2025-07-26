@@ -1,18 +1,20 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+//  import { Injectable } from '@angular/core';
+// import translate from 'google-translate-api-browser';
 
-@Injectable({ providedIn: 'root' })
-export class TranslationService {
-  constructor(private http: HttpClient) { }
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class TranslationService {
 
-  translate(text: string, target: string): Observable<any> {
-    // Use LibreTranslate API, or replace with your preferred service
-    return this.http.post('https://libretranslate.de/translate', {
-      q: text,
-      source: 'auto',
-      target: target,
-      format: 'text'
-    });
-  }
-}
+//   constructor() {}
+
+//   async translateText(text: string, targetLang: string): Promise<string> {
+//     try {
+//       const result = await translate(text, { to: targetLang });
+//       return result.text;
+//     } catch (error) {
+//       console.error('Translation error:', error);
+//       return text;  // fallback to original text on error
+//     }
+//   }
+// }

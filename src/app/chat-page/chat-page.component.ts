@@ -8,8 +8,9 @@ import { PageHeaderComponent } from '../page-header/page-header.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { jsPDF } from 'jspdf';
 import { Observable } from 'rxjs';
-import { TranslationService } from '../translate.service';
+import translate from 'google-translate-api-browser';
 
+ 
 @Component({
   selector: 'app-chat-page',
   standalone: true,
@@ -51,10 +52,16 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
   currentLoadingMessage = '';
   loadingInterval: any;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient,private translationService: TranslationService) { }
+  constructor(private route: ActivatedRoute, private http: HttpClient) { }
  
 
   ngOnInit() {
+   
+ console.log('Protocol:', window.location.protocol);
+  if (!window.location.protocol) {
+    (window as any).location.protocol = 'https:';
+  }
+  
     this.route.queryParams.subscribe(params => {
       const question = params['question'];
       if (question) {
@@ -92,7 +99,6 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
   private sendStreamingMessage(message: string) {
     const botMessageId = this.nextId++;
     
-    // Add empty bot message that will be populated with streaming content
     this.messages.push({ 
       id: botMessageId, 
       text: '', 
@@ -100,7 +106,6 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
       isStreaming: true
     });
 
-    // Create EventSource-like functionality using fetch
     this.streamResponse(message, botMessageId);
   }
 
@@ -200,7 +205,6 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
     const messageIndex = this.messages.findIndex(m => m.id === messageId);
     if (messageIndex !== -1) {
       this.messages[messageIndex].text += token;
-      // Trigger change detection and scroll
       setTimeout(() => this.scrollToBottom(), 0);
     }
   }
@@ -286,11 +290,14 @@ selectLanguage(msgId: number, languageLabel: string) {
     const targetCode = this.languageMappings[languageLabel];
     const original = message.originalText || message.text;
     if (!message.originalText) message.originalText = message.text;
-    // Only translate if not already translated to this language
-    this.translationService.translate(original, targetCode).subscribe(
-      (res: any) => message.text = res.translatedText || res.translated_text,
-      () => message.text = 'Translation failed'
-    );
+
+    translate(original, { to: targetCode })
+      .then((res) => {
+        message.text = res.text;
+      })
+      .catch(() => {
+        message.text = 'Translation failed';
+      });
   }
 }
 

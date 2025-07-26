@@ -30,12 +30,12 @@ formData.append('index_name', 'new-rag-documents');
   return this.http.post<any>(this.uploadFile, formData);  
 }
 
-
 uploadLinks(namespace: string, urls: string[]): Observable<any> {
+  debugger 
   const payload = {
     namespace,
     index_name: 'new-rag-documents',
-    urls : [urls],  
+    urls: urls
   };
 
   return this.http.post<any>(this.uploadUrl, payload);
