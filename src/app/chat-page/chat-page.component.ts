@@ -7,6 +7,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { PageHeaderComponent } from '../page-header/page-header.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { jsPDF } from 'jspdf';
+import { Observable } from 'rxjs';
+import { TranslationService } from '../translate.service';
 
 @Component({
   selector: 'app-chat-page',
@@ -16,12 +18,25 @@ import { jsPDF } from 'jspdf';
   styleUrl: './chat-page.component.scss'
 })
 export class ChatPageComponent implements AfterViewChecked, OnInit {
-  messages: { id: number, text: string, sender: 'user' | 'bot' | 'error', isStreaming?: boolean, suggestions?: string[]; }[] = [];
+  messages: { 
+  id: number,
+  text: string,
+  sender: 'user' | 'bot' | 'error', 
+  isStreaming?: boolean, 
+  suggestions?: string[],
+  originalText?: string 
+ }[] = [];
   currentMessage: string = '';
   startedChat = false;
   openDropdownMsgId: number | null = null;
   selectedLanguages: { [msgId: number]: string } = {};
   useStreaming = true; // Toggle between streaming and non-streaming
+  languageMappings: any = {
+  'English': 'en',
+  'French': 'fr',
+  'Hindi': 'hi'
+};
+
 
   @ViewChild('chatBox') chatBox!: ElementRef;
   showLoader: boolean = false;
@@ -36,7 +51,8 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
   currentLoadingMessage = '';
   loadingInterval: any;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) { }
+  constructor(private route: ActivatedRoute, private http: HttpClient,private translationService: TranslationService) { }
+ 
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -48,6 +64,8 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
     });
   }
 
+
+  
   private nextId = 1;
   selectedOption = '';
 
@@ -88,7 +106,7 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
 
   private async streamResponse(message: string, botMessageId: number) {
     try {
-      const response = await fetch('http://127.0.0.1:5000/query', {
+      const response = await fetch('https://bizzhack-rag.onrender.com/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -259,15 +277,23 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
     }
   }
 
-  selectLanguage(msgId: number, language: string) {
-    this.selectedLanguages[msgId] = language;
-    this.openDropdownMsgId = null;
+selectLanguage(msgId: number, languageLabel: string) {
+  this.selectedLanguages[msgId] = languageLabel;
+  this.openDropdownMsgId = null;
 
-    const message = this.messages.find(m => m.id === msgId && m.sender === 'bot');
-    if (message) {
-      this.translateMessage(message, language);
-    }
+  const message = this.messages.find(m => m.id === msgId && m.sender === 'bot');
+  if (message) {
+    const targetCode = this.languageMappings[languageLabel];
+    const original = message.originalText || message.text;
+    if (!message.originalText) message.originalText = message.text;
+    // Only translate if not already translated to this language
+    this.translationService.translate(original, targetCode).subscribe(
+      (res: any) => message.text = res.translatedText || res.translated_text,
+      () => message.text = 'Translation failed'
+    );
   }
+}
+
 
   translateMessage(msg: any, lang: string): void {
     if (lang === 'French') {

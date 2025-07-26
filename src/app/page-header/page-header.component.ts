@@ -9,11 +9,14 @@ import { Dialog } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { FileUpload } from 'primeng/fileupload';
 import { TabViewModule } from 'primeng/tabview';
+import { ApiCallService } from '../api-call.service';
+import { HttpEventType } from '@angular/common/http';
+import { ProgressSpinner } from "primeng/progressspinner";
 
 
 @Component({
   selector: 'app-page-header',
-  imports: [CommonModule, FormsModule, SelectModule,ButtonModule,Dialog,InputTextModule,FileUpload,TabViewModule],
+  imports: [CommonModule, FormsModule, SelectModule, ButtonModule, Dialog, InputTextModule, FileUpload, TabViewModule, ProgressSpinner],
   templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',
 })
@@ -23,10 +26,22 @@ export class PageHeaderComponent implements OnInit {
   selectedBusiness: string | null = null;
   visible: boolean = false;
   activeTabIndex: number = 0;
-  uploadUrl: string = '';
+  uploadUrl: string[] = [];
   businessName: string = '';
+  selectedFiles: File[] = [];
+  namespace: any = '';
+  dragActive: boolean = false;
+linkUrls: string[] = [];
+  showLoader: boolean = false;
+
+
+  constructor(private apiService: ApiCallService)
+  {}
 
   ngOnInit(): void {
+    
+    this.namespace =  localStorage.getItem('selectedBusiness')
+    console.log(this.namespace);
     
     this.selectedBusiness = localStorage.getItem('selectedBusiness');
     // if(!this.selectedBusiness){
@@ -35,7 +50,14 @@ export class PageHeaderComponent implements OnInit {
     // }
   }
 
+    onFileSelect(event: any) {
+    this.selectedFiles = Array.from(event.files || []);
+  }
 
+
+    onClear() {
+    this.dragActive = false;
+  }
 
 showDialog() {
   this.visible = true;
@@ -43,12 +65,50 @@ showDialog() {
 }
 
 onUploadFileSave() {
-  console.log('File Upload triggered');
-  this.visible = false;
+  debugger
+  if (!this.namespace || this.selectedFiles.length === 0) return;
+
+  this.showLoader = true;
+
+  this.apiService.uploadFiles(this.namespace, this.selectedFiles).subscribe({
+    next: (response) => {
+      console.log('Upload success', response);
+      this.showLoader = false;
+      this.visible = false; // Close dialog
+    },
+    error: (err) => {
+      console.error('Upload failed', err);
+      this.showLoader = false;
+      this.visible = false; // Close dialog
+    },
+  });
 }
 
-onUploadUrlSave() {
-  console.log('URL to upload:', this.uploadUrl);
-  this.visible = false;
+removeUrl(index: number): void {
+  this.linkUrls.splice(index, 1);
 }
+
+
+onUploadUrlSave() {
+  console.log('URL Upload triggered:', this.uploadUrl);
+
+  if (!this.namespace || !this.uploadUrl) return;
+
+  this.showLoader = true;
+
+  this.apiService.uploadLinks(this.namespace, this.uploadUrl).subscribe({
+    next: (res) => {
+      console.log('Link upload successful', res);
+      this.showLoader = false;
+      this.visible = false;
+    },
+    error: (err) => {
+      console.error('Link upload failed', err);
+      this.showLoader = false;
+      this.visible = false;
+    }
+  });
+}
+
+
 }
