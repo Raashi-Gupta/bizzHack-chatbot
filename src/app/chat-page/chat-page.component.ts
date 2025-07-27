@@ -1,4 +1,4 @@
-import { Component, AfterViewChecked, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, AfterViewChecked, ElementRef, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,6 +9,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { jsPDF } from 'jspdf';
 import { Observable } from 'rxjs';
 import translate from 'google-translate-api-browser';
+import { environment } from '../../environment';
+// import { environment } from '../../environment';
 
  
 @Component({
@@ -51,9 +53,11 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
   currentLoadingStepIndex = 0;
   currentLoadingMessage = '';
   loadingInterval: any;
+  isRecording: boolean = false;
+  mediaRecorder!: MediaRecorder;
+  audioChunks: Blob[] = [];
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) { }
- 
+  constructor(private route: ActivatedRoute, private http: HttpClient, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
    
@@ -396,5 +400,50 @@ handleSuggestionClick(suggestion: string) {
     const div = document.createElement('div');
     div.innerHTML = html;
     return div.textContent || div.innerText || '';
+  }
+
+  async statRecording(){
+    console.log("startRecoding");
+    this.isRecording = true;
+    this.currentMessage = '';
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    this.mediaRecorder = new MediaRecorder(stream);
+    this.audioChunks = [];
+ 
+    this.mediaRecorder.ondataavailable = (event) => {
+      this.audioChunks.push(event.data);
+    };
+ 
+    this.mediaRecorder.onstop = () => {
+      const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+      this.sendToWhisper(audioBlob);
+    };
+ 
+    this.mediaRecorder.start();
+    this.isRecording = true;
+  }
+ 
+  stopRecording(){
+    if (this.mediaRecorder && this.isRecording) {
+      this.mediaRecorder.stop();
+    }
+      this.isRecording = false;
+  }
+
+  async sendToWhisper(audioBlob: Blob) {
+    const formData = new FormData();
+    formData.append('file', audioBlob, 'recording.webm');
+ 
+    const response = await fetch('https://api-inference.huggingface.co/models/openai/whisper-large-v3', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${environment.huggingFaceToken}`
+      },
+      body: audioBlob // You can also send `formData` here depending on Hugging Face requirements
+    });
+ 
+    const result = await response.json();
+    this.currentMessage = result.text || 'Transcription failed';
+    this.cdr.detectChanges();
   }
 }

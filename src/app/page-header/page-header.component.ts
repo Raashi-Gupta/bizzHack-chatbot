@@ -39,7 +39,7 @@ export function multipleUrlsValidator(): ValidatorFn {
 
 @Component({
   selector: 'app-page-header',
-  imports: [CommonModule, ReactiveFormsModule ,FormsModule, SelectModule, ButtonModule, Dialog, InputTextModule, FileUpload, TabViewModule, ProgressSpinner, Toast,ToastModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, SelectModule, ButtonModule, Dialog, InputTextModule, FileUpload, TabViewModule, ProgressSpinner, Toast, ToastModule],
   templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',
   providers: [MessageService]
@@ -47,39 +47,43 @@ export function multipleUrlsValidator(): ValidatorFn {
 export class PageHeaderComponent implements OnInit {
   @ViewChild('fu') fileUpload!: FileUpload;
 
-  @Input() pageTitle :string = '';
+  @Input() pageTitle: string = '';
   operationOption = operationList
   selectedBusiness: string | null = null;
   visible: boolean = false;
   activeTabIndex: number = 0;
-   businessName: string = '';
+  businessName: string = '';
   selectedFiles: File[] = [];
   namespace: any = '';
   dragActive: boolean = false;
-   showLoader: boolean = false;
-uploading: boolean = false;
-uploadUrl = '';
-linkUrls: string[] = [];
+  showLoader: boolean = false;
+  uploading: boolean = false;
+  uploadUrl = '';
+  linkUrls: string[] = [];
   form!: FormGroup;
   addedUrls: string[] = [];
-uploadingUrls: boolean = false;
-
+  uploadingUrls: boolean = false;
+  isAdmin: boolean = false;
 
 
 
   constructor(private apiService: ApiCallService
-    ,private messageService: MessageService
-    ,private fb: FormBuilder)
- 
-  {}
+    , private messageService: MessageService
+    , private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
- urlInput: ['', [multipleUrlsValidator()]]     });
-    this.namespace =  localStorage.getItem('selectedBusiness')
+      urlInput: ['', [multipleUrlsValidator()]]
+    });
+    this.namespace = localStorage.getItem('selectedBusiness')
     console.log(this.namespace);
-    
+
     this.selectedBusiness = localStorage.getItem('selectedBusiness');
+    const user = localStorage.getItem('user')
+    if(user){
+      const userDetail = JSON.parse(user);
+      this.isAdmin = userDetail.role.toLowerCase() === 'admin'
+    }
     // if(!this.selectedBusiness){
     //   // this.selectedBusiness =  this.operationOption[0].name;
     //   // localStorage.setItem("currentOperation",this.selectedBusiness);
@@ -94,77 +98,77 @@ uploadingUrls: boolean = false;
   //   });
   // }
 
-    onFileSelect(event: any) {
+  onFileSelect(event: any) {
     this.selectedFiles = Array.from(event.files || []);
   }
 
 
-    onClear() {
+  onClear() {
     this.dragActive = false;
   }
 
-showDialog() {
-  this.visible = true;
-  this.activeTabIndex = 0;
-}
+  showDialog() {
+    this.visible = true;
+    this.activeTabIndex = 0;
+  }
 
- onUploadFileSave() {
-  if (!this.namespace || this.selectedFiles.length === 0) return;
+  onUploadFileSave() {
+    if (!this.namespace || this.selectedFiles.length === 0) return;
 
-  this.showLoader = true;
-  this.uploading = true;
+    this.showLoader = true;
+    this.uploading = true;
 
-  this.apiService.uploadFiles(this.namespace, this.selectedFiles).subscribe({
-    next: (response) => {
-      console.log('Upload success', response);
-      this.showLoader = false;
-      this.uploading = false;
-  this.fileUpload.clear();
+    this.apiService.uploadFiles(this.namespace, this.selectedFiles).subscribe({
+      next: (response) => {
+        console.log('Upload success', response);
+        this.showLoader = false;
+        this.uploading = false;
+        this.fileUpload.clear();
         this.selectedFiles = [];
-              this.visible = false;
-       this.messageService.add({ 
-          severity: 'success', 
-          summary: 'Success', 
-          detail: 'Files uploaded successfully' 
+        this.visible = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Files uploaded successfully'
         });
-    },
-    error: (err) => {
-      console.error('Upload failed', err);
-      this.showLoader = false;
-      this.uploading = false;
-  this.fileUpload.clear();
+      },
+      error: (err) => {
+        console.error('Upload failed', err);
+        this.showLoader = false;
+        this.uploading = false;
+        this.fileUpload.clear();
         this.selectedFiles = [];
-              this.visible = false;
-      this.messageService.add({ 
-          severity: 'error', 
-          summary: 'Error', 
-          detail: 'File upload failed' 
+        this.visible = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'File upload failed'
         });
-    },
-  });
-}
+      },
+    });
+  }
 
 
- addUrls() {
-  if (!this.form.value.urlInput) return;
+  addUrls() {
+    if (!this.form.value.urlInput) return;
 
-  const rawUrls = this.form.value.urlInput
-    .split(/[\s,]+/)
-    .map((u: string) => u.trim())
-    .filter((u: string) => u.length > 0);
+    const rawUrls = this.form.value.urlInput
+      .split(/[\s,]+/)
+      .map((u: string) => u.trim())
+      .filter((u: string) => u.length > 0);
 
-  rawUrls.forEach((url: string) => {
-    const trimmedUrl = url.trim();
-    const normalizedUrl = trimmedUrl.toLowerCase();
-    const alreadyAdded = this.addedUrls.some(existingUrl => existingUrl.toLowerCase() === normalizedUrl);
+    rawUrls.forEach((url: string) => {
+      const trimmedUrl = url.trim();
+      const normalizedUrl = trimmedUrl.toLowerCase();
+      const alreadyAdded = this.addedUrls.some(existingUrl => existingUrl.toLowerCase() === normalizedUrl);
 
-    if (!alreadyAdded) {
-      this.addedUrls.push(trimmedUrl);
-    }
-  });
+      if (!alreadyAdded) {
+        this.addedUrls.push(trimmedUrl);
+      }
+    });
 
-  this.form.patchValue({ urlInput: '' });
-}
+    this.form.patchValue({ urlInput: '' });
+  }
 
 
   removeUrl(index: number) {
@@ -187,21 +191,21 @@ showDialog() {
         this.visible = false;
         this.uploadingUrls = false;
         this.addedUrls = [];
-        this.messageService.add({ 
-          severity: 'success', 
-          summary: 'Success', 
-          detail: 'URL Data uploaded successfully' 
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'URL Data uploaded successfully'
         });
       },
       error: (err) => {
-       console.error('Upload failed URL', err);
+        console.error('Upload failed URL', err);
         this.showLoader = false;
         this.uploadingUrls = false;
         this.visible = false;
-        this.messageService.add({ 
-          severity: 'error', 
-          summary: 'Error', 
-          detail: 'URL upload failed' 
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'URL upload failed'
         });
       }
     });

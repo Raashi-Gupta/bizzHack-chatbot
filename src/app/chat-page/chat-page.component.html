@@ -50,17 +50,24 @@
         <ng-container *ngFor="let msg of messages">
           <div class="message-wrapper">
 
-            <div class="message" [ngClass]="msg.sender">
-              <div *ngIf="msg.text" [innerHTML]="msg.text"></div>
-              <div *ngIf="msg.suggestions?.length" class="suggestions">
-                <p><strong>Suggested Follow-ups:</strong></p>
-                <ul>
-                  <li *ngFor="let suggestion of msg.suggestions" (click)="handleSuggestionClick(suggestion)" class="suggestion-link">
-                    {{ suggestion }}
-                  </li>
-                </ul>
-              </div>
+            <div *ngIf="msg.text" class="message" [ngClass]="msg.sender">
+              <div [innerHTML]="msg.text"></div>
             </div>
+               <div *ngIf="msg.suggestions?.length" class="suggestions-tabs">
+                 <p><strong>Suggested Follow-ups:</strong></p>
+                  <div class="suggestion-chips">
+                    <span
+                      *ngFor="let suggestion of msg.suggestions"
+                      (click)="handleSuggestionClick(suggestion)"
+                      class="suggestion-chip"
+                      tabindex="0"
+                      role="button"
+                      aria-pressed="false"
+                    >
+                      {{ suggestion }}
+                    </span>
+                    </div>
+                  </div>
 
             <div *ngIf="msg.sender === 'bot' && msg.text" class="message-actions">
               <div class="language-dropdown-container">
@@ -87,16 +94,20 @@
         </ng-container>
 
         <div *ngIf="showLoader" style="text-align: center;">
-            {{ currentLoadingMessage }}...
+          {{ currentLoadingMessage }}...
         </div>
       </div>
     </div>
-    <div class="input-box">
-      <div class="input-wrapper">
-        <input [(ngModel)]="currentMessage" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
-        <button pButton type="button" icon="pi pi-send" iconPos="right" class="send-button-inside"
-          (click)="sendMessage()">
-        </button>
+      <div class="input-box">
+        <div class="input-wrapper">
+          <input [(ngModel)]="currentMessage" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
+          <div class="send-button-inside">
+            <button *ngIf="!isRecording" pButton type="button" icon="pi pi-microphone" class="recordButton"
+              (click)="statRecording()"></button>
+            <button *ngIf="isRecording" pButton type="button" icon="pi pi-stop-circle" class="stopButton"
+              (click)="stopRecording()"></button>
+            <button pButton type="button" icon="pi pi-send" class="sendButton" (click)="sendMessage()"></button>
+          </div>
       </div>
     </div>
   </div>

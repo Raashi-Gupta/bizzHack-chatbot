@@ -1,0 +1,66 @@
+[
+  {
+    "email": "raashi.gupta@saint-gobain.com",
+    "firstName": "Raashi",
+    "lastName": "Gupta",
+    "role": "admin",
+    "business": ["B1", "B2"]
+  },
+  {
+    "email": "yash.brid@saint-gobain.com",
+    "firstName": "Yash",
+    "lastName": "Brid",    
+    "role": "admin",
+    "business": ["B1", "B2", "B3", "B4"]
+  },
+  {
+    "email": "ankita.shah@saint-gobain.com",
+    "firstName": "Ankita",
+    "lastName": "Shah",
+    "role": "admin",
+    "business": ["B1", "B2", "B3","B4"]
+  },
+  {
+    "email": "lavanya.shetty@saint-gobain.com",
+    "firstName": "Lavanya",
+    "lastName": "Shetty",
+    "role": "user",
+    "business": ["B1", "B2", "B3","B4"]
+  },
+  {
+    "email": "rahul.kapadia@saint-gobain.com",
+    "firstName": "Rahul",
+    "lastName": "Kapadia",
+    "role": "user",
+    "business": ["B1"]
+  },
+  {
+    "email": "yogesh.kashid@saint-gobain.com",
+    "firstName": "Yogesh",
+    "lastName": "Kashid",
+    "role": "user",
+    "business": ["B4","B2"]
+  },
+  {
+    "email": "ishwari.tilekar@saint-gobain.com",
+    "firstName": "Ishwari",
+    "lastName": "Tilekar",
+    "role": "user",
+    "business": ["B1", "B3"]
+  },
+  {
+    "email": "sakshi.bhojwani@saint-gobain.com",
+    "firstName": "Sakshi",
+    "lastName": "Bhojwani",
+    "role": "user",
+    "business": ["B1","B4"]
+  },
+  {
+    "email": "mohammad.yamin@saint-gobain.com",
+    "firstName": "Mohammad",
+    "lastName": "Yamin",
+    "role": "user",
+    "business": ["B1", "B2", "B3","B4"]
+  }
+
+]

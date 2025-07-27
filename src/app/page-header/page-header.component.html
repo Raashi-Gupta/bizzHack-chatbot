@@ -3,7 +3,7 @@
  
   <div class="flex-grow-1"></div>
  
-  <div class="ml-auto">
+  <div class="ml-auto" *ngIf="isAdmin">
     <p-button
       (click)="showDialog()"
       label="Update DB"
@@ -30,159 +30,168 @@
 <p-dialog
   header="Database Upload"
   [(visible)]="visible"
-  [style]="{ width: '65rem' }"
+  [style]="{ width: '65rem', maxWidth: '95vw' }"
   [modal]="true"
   [draggable]="false"
   [resizable]="false"
   styleClass="custom-dialog"
 >
   <p-tabView [(activeIndex)]="activeTabIndex">
-    <div *ngIf="showLoader" style="text-align: center;">
-        <p-progress-spinner strokeWidth="8" fill="transparent" [style]="{ width: '50px', height: '50px' }" />
-        </div>
- <p-tabPanel header="Upload File">
-  <div class="p-4">
-    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-blue-400 transition-colors">
-      <p-fileUpload
-        #fu
-        mode="basic"
-        chooseLabel="Choose Files"
-        chooseIcon="pi pi-upload"
-        name="demo[]"
-        accept=".pdf"
-        multiple
-        styleClass="w-full"
-        customUpload="true"
-        [disabled]="uploading"
-        (onSelect)="onFileSelect($event)"
-      />
+    <div *ngIf="showLoader" class="text-center my-3">
+      <p-progress-spinner strokeWidth="8" fill="transparent" [style]="{ width: '50px', height: '50px' }" />
     </div>
-  </div>
+    <p-tabPanel header="Upload File">
+      <div class="container-fluid p-3">
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-blue-400 transition-colors text-center">
+              <p-fileUpload
+                #fu
+                mode="basic"
+                chooseLabel="Choose Files"
+                chooseIcon="pi pi-upload"
+                name="demo[]"
+                accept=".pdf"
+                multiple
+                styleClass="w-100"
+                customUpload="true"
+                [disabled]="uploading"
+                (onSelect)="onFileSelect($event)"
+              />
+            </div>
+          </div>
+        </div>
 
-  <!-- 🔽 Action buttons including Clear -->
-  <div style="display: flex; justify-content: flex-end; gap: 20px;" class="px-4 pb-4">
-    <p-button
-      label="Clear"
-      severity="danger"
-      icon="pi pi-trash"
-      class="py-2"
-      [disabled]="uploading"
-      (click)="fu.clear()"
-    />
-    <p-button
-      label="Cancel"
-      severity="secondary"
-      icon="pi pi-times"
-      class="py-2"
-      [disabled]="uploading"
-      (click)="visible = false"
-    />
-    <p-button
-      label="Upload File"
-      severity="success"
-      icon="pi pi-check"
-      class="py-2"
-      [disabled]="uploading"
-      (click)="onUploadFileSave()"
-    />
-  </div>
-</p-tabPanel>
+        <!-- 🔽 Action buttons including Clear -->
+        <div class="row">
+          <div class="col-12 button-group">
+            <p-button 
+            label="Clear" 
+            severity="danger" 
+            icon="pi pi-trash" 
+            [disabled]="uploading" 
+            (click)="fu.clear()"
+            />
+            <p-button 
+            label="Cancel" 
+            severity="secondary" 
+            icon="pi pi-times" 
+            [disabled]="uploading" 
+            (click)="visible = false"
+            />
+            <p-button 
+            label="Upload File" 
+            severity="success" 
+            icon="pi pi-check" 
+            [disabled]="uploading" 
+            (click)="onUploadFileSave()"
+            />
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
 
- 
- <p-tabPanel header="Upload via URL" class="upload-panel">
-  <form [formGroup]="form" class="upload-form">
 
-    <label class="upload-label">
-      <i class="pi pi-link"></i>
-      Paste URL(s)
-    </label>
-
-<textarea
-  pInputTextarea
-  rows="5"
-  formControlName="urlInput"
-  placeholder="Enter one or more URLs separated by commas or new lines"
-  class="upload-textarea"
-  [class.invalid]="form.controls['urlInput'].invalid && form.controls['urlInput'].touched"
-></textarea>
+    <p-tabPanel header="Upload via URL">
+      <form [formGroup]="form" class="upload-form container-fluid p-3">
+        <div class="row mb-3">
+          <div class="col-12">
+            <label class="upload-label mb-2">
+              <i class="pi pi-link"></i>
+               Paste URL(s)
+            </label>
+            <textarea
+              pInputTextarea
+              rows="5"
+              formControlName="urlInput"
+              placeholder="Enter one or more URLs separated by commas or new lines"
+              class="upload-textarea form-control"
+              [class.invalid]="form.controls['urlInput'].invalid && form.controls['urlInput'].touched"
+            ></textarea>
 
 <!-- Error message -->
-<div *ngIf="form.controls['urlInput'].errors?.['invalidUrls'] && form.controls['urlInput'].touched" class="p-error mt-2">
-  One or more URLs are invalid. Please enter valid URLs starting with http:// or https://
-</div>
+             <div *ngIf="form.controls['urlInput'].errors?.['invalidUrls'] && form.controls['urlInput'].touched" class="text-danger mt-2">
+              One or more URLs are invalid. Please enter valid URLs starting with http:// or https://
+            </div>
+          </div>
+        </div>
 
-    <div class="url-list">
-      <div
-        *ngFor="let url of addedUrls; let i = index"
-        class="url-item"
-      >
-        <span class="url-text" title="{{ url }}">{{ url }}</span>
-        <button
-          pButton
-          icon="pi pi-times"
-          class="url-remove-button"
-          (click)="removeUrl(i)"
-          type="button"
-          aria-label="Remove URL"
-          pRipple
-        ></button>
-      </div>
-      <span *ngIf="addedUrls.length === 0" class="no-urls-text">No URLs added yet</span>
-    </div>
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="url-list">
+              <div
+              *ngFor="let url of addedUrls; let i = index" 
+              class="url-item d-flex justify-content-between align-items-center mb-2 border p-2 rounded">
+                <span class="url-text">{{ url }}</span>
+                <button 
+                pButton 
+                icon="pi pi-times" 
+                class="url-remove-button p-button-danger p-button-text" 
+                (click)="removeUrl(i)" 
+                type="button"
+                aria-label="Remove URL"
+                pRipple
+              ></button>
+              </div>
+              <span *ngIf="addedUrls.length === 0" class="no-urls-text">No URLs added yet</span>
+            </div>
+          </div>
+        </div>
 
-    <div class="button-group">
-      <p-button
-        label="Add URLs"
-        icon="pi pi-plus"
-        [disabled]="form.invalid || !form.value.urlInput?.trim()"
-        (click)="addUrls()"
-        type="button"
-        class="btn add-btn"
-        pRipple
-      ></p-button>
+        <div class="row">
+          <div class="col-12 button-group">
+            <p-button
+             label="Add URLs" 
+             icon="pi pi-plus" 
+             [disabled]="form.invalid || !form.value.urlInput?.trim()"
+              (click)="addUrls()" 
+              type="button" 
+              class="btn add-btn"
+              pRipple
+              ></p-button>
 
-      <p-button
-        label="Clear All"
-        icon="pi pi-trash"
-        severity="danger"
-        [disabled]="addedUrls.length === 0"
-        (click)="clearAll()"
-        type="button"
-        class="btn clear-btn"
-        pRipple
-      ></p-button>
+            <p-button 
+            label="Clear All" 
+            icon="pi pi-trash" 
+            severity="danger" 
+            [disabled]="addedUrls.length === 0" 
+            (click)="clearAll()" 
+            type="button" 
+            class="btn clear-btn"
+            pRipple
+            ></p-button>
 
-      <p-button
-        label="Cancel"
-        icon="pi pi-times"
-        severity="secondary"
-        (click)="visible = false"
-        type="button"
-        class="btn cancel-btn"
-        pRipple
-      ></p-button>
+            <p-button 
+            label="Cancel"
+             icon="pi pi-times" 
+             severity="secondary" 
+             (click)="visible = false" 
+             type="button" 
+             class="btn cancel-btn"
+             pRipple
+             ></p-button>
 
-      <p-button
-        *ngIf="addedUrls.length > 0"
-        label="Submit"
-        icon="pi pi-check"
-        severity="success"
-        (click)="submitUrls()"
-        type="button"
-        class="btn submit-btn"
-        pRipple
-      ></p-button>
-    </div>
-  </form>
-</p-tabPanel>
+            <p-button 
+            *ngIf="addedUrls.length > 0"
+             label="Submit" 
+             icon="pi pi-check"
+              severity="success"
+               (click)="submitUrls()"
+                type="button" 
+                class="btn submit-btn"
+                pRipple
+                ></p-button>
+          </div>
+        </div>
+      </form>
+    </p-tabPanel>
 
 
 
- 
+
   </p-tabView>
-     
+
 </p-dialog>
  
 </div>
 <p-toast></p-toast>
-

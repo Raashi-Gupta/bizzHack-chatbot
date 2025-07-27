@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { businessList, operationList } from '../shared/operationList';
+import { businessList, getAccessibleBusinesses, operationList } from '../shared/operationList';
 import { BusinessSelectionService } from '../common-service/business-selection.service';
 
 @Component({
@@ -16,12 +16,13 @@ export class HomeScreenComponent implements OnInit{
   constructor(private router: Router, private businessService: BusinessSelectionService){}
 
   ngOnInit(): void {
-    const storedName = localStorage.getItem('userName');
+      const storedName = localStorage.getItem('user');
     if (storedName) {
-      this.userName = storedName;
+      const user = JSON.parse(storedName);
+      this.userName = user.firstName;
     }
   }
-  business = businessList;
+  business = getAccessibleBusinesses();
   operations = operationList;
  navigateTo(businessName: string) {
     this.businessService.setBusiness(businessName);

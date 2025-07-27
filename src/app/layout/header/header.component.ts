@@ -4,7 +4,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
 import { BusinessSelectionService } from '../../common-service/business-selection.service';
 import { Subscription } from 'rxjs';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -19,12 +19,13 @@ export class HeaderComponent implements OnInit {
     private businessSubscription!: Subscription;
   isBusinessSelected: boolean = false;
 
-  constructor(private businessService: BusinessSelectionService) { }
+  constructor(private businessService: BusinessSelectionService, private router: Router) { }
 
   ngOnInit(): void {
-    const storedName = localStorage.getItem('userName');
+    const storedName = localStorage.getItem('user');
     if (storedName) {
-      this.userName = storedName;
+      const user = JSON.parse(storedName);
+      this.userName = user.firstName;
     }
     this.businessSubscription = this.businessService.selectedBusiness$.subscribe(business => {
       this.isBusinessSelected = !!business;
@@ -54,5 +55,9 @@ export class HeaderComponent implements OnInit {
   toggleMobileMenu() {
     this.showMobileMenu = !this.showMobileMenu;
   }
-}
 
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
+}

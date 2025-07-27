@@ -234,3 +234,21 @@ button:disabled, button.p-disabled {
 .url-list::-webkit-scrollbar-thumb:hover {
   background: var(--surface-hover);
 }
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+
+  @media (max-width: 576px) {
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .btn {
+    flex-shrink: 0; // Prevent buttons from shrinking on small screens
+  }
+}

@@ -6,8 +6,13 @@ export const  operationList = [
 ];
 
 export const businessList = [
-  { name: 'Business1', value: 'Sekurit', color: '#00CFE8', icon: 'pi-car',redirect:"/chat" },
-  { name: 'Business2', value: 'Gyproc', color: '#FF9F43', icon: 'pi-building',redirect:"/chat" },
-  { name: 'Business3', value: 'Abrasives', color: '#9C27B0', icon: 'pi-briefcase',redirect:"/chat" },
-  { name: 'Business4', value: 'Adhesives', color: '#607D8B', icon: 'pi-twitch',redirect:"/chat" },
+   {id:"B1", name: 'Business1', value: 'Sekurit', color: '#00CFE8', icon: 'pi-car',redirect:"/chat" },
+   {id:"B2", name: 'Business2', value: 'Gyproc', color: '#FF9F43', icon: 'pi-building',redirect:"/chat" },
+   {id:"B3", name: 'Business3', value: 'Abrasives', color: '#9C27B0', icon: 'pi-briefcase',redirect:"/chat" },
+   {id:"B4", name: 'Business4', value: 'Adhesives', color: '#607D8B', icon: 'pi-twitch',redirect:"/chat" },
 ]
+
+export function getAccessibleBusinesses(): any[] {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  return businessList.filter(biz => user.business?.includes(biz.id));
+}

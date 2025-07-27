@@ -99,10 +99,6 @@
   border-color: #0010bc;
 }
 
-.send-button-inside:hover {
-  background: #0a00c3;
-  transform: translateY(-50%) scale(1.05);
-}
 
 .send-button-inside {
   position: absolute;
@@ -110,7 +106,6 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 1;
-  background-color: #000393 ;
   border-radius: 30px;
   margin: 0px 2px;
 }
@@ -205,13 +200,108 @@
   background-color: #f0f0f0;
 }
 
-.suggestion-link {
-  color: #1a0dab;
-  text-decoration: underline;
-  cursor: pointer;
-  margin: 4px 0;
+// .suggestion-link {
+//   color: #1a0dab;
+//   text-decoration: underline;
+//   cursor: pointer;
+//   margin: 4px 0;
+// }
+
+// .suggestion-link:hover {
+//   color: #c61a09;
+// }
+
+.suggestions-box {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background-color: #e2ecff;
+  border-radius: 12px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-.suggestion-link:hover {
-  color: #c61a09;
+.suggestion-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.suggestion-chip {
+  background-color: white;
+  color: #210073;
+  padding: 8px 16px;
+  border-radius: 9999px; /* fully rounded pill */
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  user-select: none;
+  transition: background-color 0.25s, color 0.25s;
+  border: 1px solid #210073;
+  white-space: nowrap;
+}
+
+.suggestion-chip:hover,
+.suggestion-chip:focus {
+  background-color: #210073;
+  color: white;
+  outline: none;
+}
+
+.recordButton{
+  background-color: white;
+  border: none;
+  color:gray;
+}
+
+.stopButton {
+  background-color: white;
+  border: none;
+  color:red;
+}
+
+.stopButton :hover{
+  background-color: white;
+  border: none;
+  transform: scale(1.05);
+  color: red;
+}
+
+.recordButton:hover{
+  background-color: white;
+  border: none;
+  transform: scale(1.05);
+  color: gray;
+}
+
+.sendButton {
+  background-color: #000393;
+  border: 1px solid #000393;
+  color: white;
+  border-radius: 50%;
+}
+
+.sendButton:hover {
+  transform: scale(1.05);
+   background-color: #000393;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .message {
+    font-size: 14px;
+  }
+
+  .input-wrapper input {
+    font-size: 14px;
+    padding: 14px 50px 14px 16px;
+  }
+
+  .send-button-inside {
+    gap: 4px;
+  }
+}
+
+.message.bot{
+  background-color: none;
 }
