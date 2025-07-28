@@ -8,7 +8,7 @@ import { PageHeaderComponent } from '../page-header/page-header.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { jsPDF } from 'jspdf';
 import { Observable } from 'rxjs';
-import translate from 'google-translate-api-browser';
+// import translate from 'google-translate-api-browser';
 import { environment } from '../../environment';
 // import { environment } from '../../environment';
 
@@ -295,13 +295,13 @@ selectLanguage(msgId: number, languageLabel: string) {
     const original = message.originalText || message.text;
     if (!message.originalText) message.originalText = message.text;
 
-    translate(original, { to: targetCode })
-      .then((res) => {
-        message.text = res.text;
-      })
-      .catch(() => {
-        message.text = 'Translation failed';
-      });
+    // translate(original, { to: targetCode })
+    //   .then((res) => {
+    //     message.text = res.text;
+    //   })
+    //   .catch(() => {
+    //     message.text = 'Translation failed';
+    //   });
   }
 }
 
