@@ -14,7 +14,7 @@
           <div class="message-wrapper">
 
             <div *ngIf="msg.text" class="message" [ngClass]="msg.sender">
-              <div [innerHTML]="msg.text || msg.translatedText"></div>
+              <div [innerHTML]="msg.text"></div>
             </div>
                <div *ngIf="msg.suggestions?.length" class="suggestions-tabs">
                  <p><strong>Suggested Follow-ups:</strong></p>
