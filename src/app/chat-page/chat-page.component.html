@@ -14,7 +14,7 @@
           <div class="message-wrapper">
 
             <div *ngIf="msg.text" class="message" [ngClass]="msg.sender">
-              <div [innerHTML]="msg.text"></div>
+              <div [innerHTML]="msg.text || msg.translatedText"></div>
             </div>
                <div *ngIf="msg.suggestions?.length" class="suggestions-tabs">
                  <p><strong>Suggested Follow-ups:</strong></p>
@@ -40,9 +40,13 @@
                 <i class="pi pi-globe"></i>
 
                 <div *ngIf="openDropdownMsgId === msg.id" class="dropdown">
-                  <div (click)="selectLanguage(msg.id, 'English')">English</div>
-                  <div (click)="selectLanguage(msg.id, 'French')">French</div>
-                  <div (click)="selectLanguage(msg.id, 'Hindi')">Hindi</div>
+                  <div (click)="translateMessage(msg, 'en')">English</div>
+                  <div (click)="translateMessage(msg, 'fr')">French</div>
+                  <div (click)="translateMessage(msg, 'es')">Spanish</div>
+                  <div (click)="translateMessage(msg, 'hi')">Hindi</div>
+                  <div (click)="translateMessage(msg, 'mr')">Marathi</div>
+                  <div (click)="translateMessage(msg, 'te')">Telugu</div>
+                  <div (click)="translateMessage(msg, 'gu')">Gujarati</div>
                 </div>
               </div>
 

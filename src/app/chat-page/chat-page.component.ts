@@ -295,15 +295,15 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
     }
   }
 
-selectLanguage(msgId: number, languageLabel: string) {
-  this.selectedLanguages[msgId] = languageLabel;
-  this.openDropdownMsgId = null;
+// selectLanguage(msgId: number, languageLabel: string) {
+//   this.selectedLanguages[msgId] = languageLabel;
+//   this.openDropdownMsgId = null;
 
-  const message = this.messages.find(m => m.id === msgId && m.sender === 'bot');
-  if (message) {
-    const targetCode = this.languageMappings[languageLabel];
-    const original = message.originalText || message.text;
-    if (!message.originalText) message.originalText = message.text;
+//   const message = this.messages.find(m => m.id === msgId && m.sender === 'bot');
+//   if (message) {
+//     const targetCode = this.languageMappings[languageLabel];
+//     const original = message.originalText || message.text;
+//     if (!message.originalText) message.originalText = message.text;
 
     // translate(original, { to: targetCode })
     //   .then((res) => {
@@ -312,19 +312,19 @@ selectLanguage(msgId: number, languageLabel: string) {
     //   .catch(() => {
     //     message.text = 'Translation failed';
     //   });
-  }
-}
+  // }
+// }
 
 
-  translateMessage(msg: any, lang: string): void {
-    if (lang === 'French') {
-      msg.text = 'Bonjour!';
-    } else if (lang === 'Hindi') {
-      msg.text = 'नमस्ते!';
-    } else {
-      msg.text = 'Hello!';
-    }
-  }
+  // translateMessage(msg: any, lang: string): void {
+  //   if (lang === 'French') {
+  //     msg.text = 'Bonjour!';
+  //   } else if (lang === 'Hindi') {
+  //     msg.text = 'नमस्ते!';
+  //   } else {
+  //     msg.text = 'Hello!';
+  //   }
+  // }
 
   extractAfterThink(answer: string): string {
     const closingTag = "</think>";
@@ -492,5 +492,53 @@ handleSuggestionClick(suggestion: string) {
     decoded += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
   }
   return decoded;
+}
+
+translateMessage(msg: any, targetLang: string) {
+  const div = document.createElement('div');
+  div.innerHTML = msg.text;
+ 
+  const textNodes: Node[] = [];
+ 
+  const walker = document.createTreeWalker(div, NodeFilter.SHOW_TEXT, null);
+  let node: Node | null;
+  while ((node = walker.nextNode())) {
+    if (node.textContent && node.textContent.trim()) {
+      textNodes.push(node);
+    }
+  }
+ 
+  const translatePromises = textNodes.map((node: Node) => {
+    const originalText = node.textContent || '';
+    const encodedText = encodeURIComponent(originalText);
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodedText}`;
+ 
+    return this.http.get<any>(url).toPromise().then(res => {
+      const translatedText = res[0][0][0];
+      node.textContent = originalText.replace(originalText, translatedText);
+    });
+  });
+ 
+  Promise.all(translatePromises).then(() => {
+    msg.text = div.innerHTML;
+    this.selectedLanguages[msg.id] = this.getLangLabel(targetLang);
+   // this.openDropdownMsgId = null;
+  });
+
+  this.openDropdownMsgId = null;
+}
+
+getLangLabel(code: string): string {
+  const langMap: any = {
+    en: 'English',
+    fr: 'French',
+    es: 'Spanish',
+    hi: 'Hindi',
+    mr: 'Marathi',
+    te: 'Telugu',
+    gu: 'Gujarati',
+    bn: 'Bengali'
+  };
+  return langMap[code] || code;
 }
 }
