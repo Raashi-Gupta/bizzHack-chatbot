@@ -1,3 +1,3 @@
 export const environment = {
-  HUGGINGFACETOKEN: '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'
+  HUGGINGFACETOKEN: 'aGZfTXFBcFZ4VHlKckNhRGdieUhFV1djU3RVcXRQRXRJc3ZCdA=='
 };

@@ -441,11 +441,13 @@ handleSuggestionClick(suggestion: string) {
   async sendToWhisper(audioBlob: Blob) {
     const formData = new FormData();
     formData.append('file', audioBlob, 'recording.webm');
- 
+    // const endcodedString = 
+    const encodedString: string = environment.HUGGINGFACETOKEN;
+    const decodedString: string = atob(encodedString);
     const response = await fetch('https://api-inference.huggingface.co/models/openai/whisper-large-v3', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${environment.HUGGINGFACETOKEN}`
+        Authorization: `Bearer ${decodedString}`
       },
       body: audioBlob // You can also send `formData` here depending on Hugging Face requirements
     });
@@ -479,4 +481,14 @@ handleSuggestionClick(suggestion: string) {
   onDatabaseChange(){
     this.changedDatabase = !this.changedDatabase;
   }
+
+  decodeBase16(hex: string): string {
+  if (hex.length % 2 !== 0) throw new Error('Invalid hex string');
+  
+  let decoded = '';
+  for (let i = 0; i < hex.length; i += 2) {
+    decoded += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+  }
+  return decoded;
+}
 }
