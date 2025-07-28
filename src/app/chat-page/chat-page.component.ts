@@ -1,5 +1,6 @@
 import { Component, AfterViewChecked, ElementRef, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -11,12 +12,13 @@ import { Observable } from 'rxjs';
 // import translate from 'google-translate-api-browser';
 import { environment } from '../../environment';
 // import { environment } from '../../environment';
+import Tesseract from 'tesseract.js';
 
  
 @Component({
   selector: 'app-chat-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, PageHeaderComponent, ProgressSpinnerModule],
+  imports: [CommonModule, FormsModule, ButtonModule, PageHeaderComponent, ProgressSpinnerModule,TooltipModule],
   templateUrl: './chat-page.component.html',
   styleUrl: './chat-page.component.scss'
 })
@@ -56,6 +58,8 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
   isRecording: boolean = false;
   mediaRecorder!: MediaRecorder;
   audioChunks: Blob[] = [];
+  changedDatabase: boolean = false;
+  tooltipText: string = '';
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private cdr: ChangeDetectorRef) { }
 
@@ -102,6 +106,10 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
 
   private sendStreamingMessage(message: string) {
     const botMessageId = this.nextId++;
+    if (this.extractedText && this.extractedText.trim() !== '') {
+      message += `\n\n[Extracted Text from image]:\n${this.extractedText}`;
+      this.extractedText = '';
+    }
     
     this.messages.push({ 
       id: botMessageId, 
@@ -445,5 +453,30 @@ handleSuggestionClick(suggestion: string) {
     const result = await response.json();
     this.currentMessage = result.text || 'Transcription failed';
     this.cdr.detectChanges();
+  }
+
+  selectedFile: File | null = null;
+  extractedText: string = '';
+
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+    if (this.selectedFile) {
+      this.performOCR();
+    }
+  }
+
+  async performOCR() {
+    if (this.selectedFile) {
+      const result = await Tesseract.recognize(
+        this.selectedFile,
+        'eng'
+      );
+      this.extractedText = result.data.text;
+      console.log(this.extractedText);
+    }
+  }
+
+  onDatabaseChange(){
+    this.changedDatabase = !this.changedDatabase;
   }
 }

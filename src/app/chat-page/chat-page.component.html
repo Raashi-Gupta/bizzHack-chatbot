@@ -3,50 +3,13 @@
     <app-page-header [pageTitle]="'Chat'"></app-page-header>
   </div>
 </div>
-<div class="row chat-page" [ngClass]="{ 'centered': !startedChat }">
+<div class="row chat-page">
   <div class="col-12">
     <div class="chat-container">
       <div *ngIf="!startedChat" class="initial-greeting">
         <h2>Hello! How can I help you today?</h2>
       </div>
       <div class="chat-box" #chatBox *ngIf="startedChat">
-        <!-- <ng-container *ngFor="let msg of messages">
-          <div class="message-wrapper">
-            <div class="message" [ngClass]="msg.sender">
-              <p [innerHTML]="msg.text"></p>
-              <div *ngIf="msg.suggestions?.length" class="suggestions">
-                <p><strong>Suggested Follow-ups:</strong></p>
-                <ul>
-                  <li *ngFor="let suggestion of msg.suggestions" (click)="handleSuggestionClick(suggestion)" style="cursor: pointer;">
-                    {{ suggestion }}
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div *ngIf="msg.sender === 'bot'" class="message-actions">
-              <div class="language-dropdown-container">
-                <label (click)="toggleDropdown(msg.id)">
-                  {{ selectedLanguages[msg.id] || 'Change language' }}
-                </label>
-                <i class="pi pi-globe"></i>
-
-                <div *ngIf="openDropdownMsgId === msg.id" class="dropdown">
-                  <div (click)="selectLanguage(msg.id, 'English')">English</div>
-                  <div (click)="selectLanguage(msg.id, 'French')">French</div>
-                  <div (click)="selectLanguage(msg.id, 'Hindi')">Hindi</div>
-                </div>
-              </div>
-
-              <div class="divider"></div>
-              <button class="download-button" (click)="downloadMessageAsPDF(msg.text, msg.id)">
-                <div>Download PDF</div>
-                <i class="pi pi-file-pdf"></i>
-              </button>
-            </div>
-          </div>
-        </ng-container> -->
-
         <ng-container *ngFor="let msg of messages">
           <div class="message-wrapper">
 
@@ -102,6 +65,11 @@
         <div class="input-wrapper">
           <input [(ngModel)]="currentMessage" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
           <div class="send-button-inside">
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
+            <button pButton type="button" icon="pi pi-database" class="recordButton" pTooltip="Connect to database" tooltipPosition="top"
+              (click)="onDatabaseChange()" [ngClass]="{ 'selected': changedDatabase }"></button>
+            <button pButton type="button" icon="pi pi-plus" class="recordButton"
+              (click)="fileInput.click()"></button>
             <button *ngIf="!isRecording" pButton type="button" icon="pi pi-microphone" class="recordButton"
               (click)="statRecording()"></button>
             <button *ngIf="isRecording" pButton type="button" icon="pi pi-stop-circle" class="stopButton"
