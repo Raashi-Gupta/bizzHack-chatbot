@@ -60,12 +60,13 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
   audioChunks: Blob[] = [];
   changedDatabase: boolean = false;
   tooltipText: string = '';
+  selectedBusiness: string | null = '';
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-   
- console.log('Protocol:', window.location.protocol);
+  this.selectedBusiness = localStorage.getItem('selectedBusiness');
+  console.log('Protocol:', window.location.protocol);
   if (!window.location.protocol) {
     (window as any).location.protocol = 'https:';
   }
@@ -78,7 +79,6 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
       }
     });
   }
-
 
   
   private nextId = 1;
@@ -123,14 +123,15 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
 
   private async streamResponse(message: string, botMessageId: number) {
     try {
-      const response = await fetch('https://bizzhack-rag.onrender.com/query', {
+      const response = await fetch('http://127.0.0.1:5000', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
           query: message, 
-          namespace: "yash" 
+          namespace: this.selectedBusiness ,
+          history: this.messages.slice(0, -2).filter(item => !item.hasOwnProperty('suggestions'))
         })
       });
 
