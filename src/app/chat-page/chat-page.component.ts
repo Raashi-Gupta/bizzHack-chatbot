@@ -437,7 +437,7 @@ handleSuggestionClick(suggestion: string) {
     const response = await fetch('https://api-inference.huggingface.co/models/openai/whisper-large-v3', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer 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`
+        Authorization: `Bearer ${environment.HUGGINGFACETOKEN}`
       },
       body: audioBlob // You can also send `formData` here depending on Hugging Face requirements
     });
