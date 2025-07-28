@@ -1,4 +1,4 @@
-<div class="operation-tabs px-4 py-3">
+<!-- <div class="operation-tabs px-4 py-3">
     <div class="tab-list d-flex flex-wrap gap-2">
         <div class="operation-tab px-4 py-2 rounded text-white d-flex align-items-center gap-2"
             *ngFor="let item of operations" [ngStyle]="{ 'background-color': item.color, 'cursor': 'pointer' }"
@@ -7,18 +7,20 @@
             <span>{{ item.name }}</span>
         </div>
     </div>
-</div>
-
-<div class="questions-list p-4" *ngIf="selectedTab;else showSelectTab">
-    <h4>{{ selectedTab }} - Most Searched</h4>
+</div> -->
+<div class="pt-5 ps-4 mostSearched">
+<h4>{{ selectedBusiness }} - Most Searched</h4>
+<div class="questions-list p-2" >
+    
     <ul>
-        <li *ngFor="let question of questionsMap[selectedTab]" class="question-list" (click)="redirectToChat(question)">
+        <li *ngFor="let question of questionsMap[selectedBusiness]" class="question-list" (click)="redirectToChat(question)">
             {{ question }}
         </li>
     </ul>
 </div>
-<ng-template #showSelectTab>
+<!-- <ng-template #showSelectTab>
     <div class="questions-list p-4">
         <h4>Please select an operation</h4>
     </div>
-</ng-template>
+</ng-template> -->
+</div>

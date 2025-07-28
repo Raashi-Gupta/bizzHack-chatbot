@@ -22,18 +22,24 @@
 .question-list{
     padding: 10px;
     width: 100%;
-    border: 1px solid #d4eaf5;
+    border: 1px solid gray;
     margin: 10px;
     color: #5d5454;
 }
 .question-list:hover {
   cursor: pointer;
-  border: 5px solid #d7edf9;
+  // border: 5px solid #d7edf9;
+  text-decoration: underline;
 }
 
 
 .questions-list{
-    background-color: #e8f7ff;
+    // background-color: #e8f7ff;
     margin: 0 10px;
     
+}
+
+.mostSearched{
+  height: 100%;
+  background: white;
 }
