@@ -75,7 +75,12 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
       const question = params['question'];
       if (question) {
         this.currentMessage = question;
-        this.sendMessage();
+        
+        if(this.changedDatabase) {
+          this.sendMessageToSql();
+        } else {  
+        this.sendMessage(); 
+        }
       }
     });
   }
@@ -86,6 +91,12 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
   selectedOption = '';
 
   sendMessage() {
+   
+
+    if(this.changedDatabase) {
+      this.sendMessageToSql();
+    }
+    else {
     if (!this.currentMessage.trim()) return;
     
     this.startedChat = true;
@@ -102,6 +113,62 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
     this.currentMessage = '';
 
     this.sendStreamingMessage(userMessage);
+    }
+    
+  }
+
+    async sendMessageToSql() {
+      debugger
+    if (!this.currentMessage.trim()) return;
+    
+    this.startedChat = true;
+    this.startCustomLoading();
+    
+    const userMessageId = this.nextId++;
+    this.messages.push({ 
+      id: userMessageId, 
+      text: this.currentMessage, 
+      sender: 'user' 
+    });
+
+    const userMessage = this.currentMessage;
+    this.currentMessage = '';
+
+ 
+
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/sql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          query: userMessage
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+
+      console.log('Response received:', data);
+
+       const userMessageId = this.nextId++;
+    this.messages.push({ 
+      id: userMessageId, 
+      text: data.response,
+      sender: 'bot' 
+    });
+
+    this.stopCustomLoading();
+
+
+      
+    } catch (error) {
+      console.error('Streaming error:', error);
+    }
     
   }
 
@@ -124,7 +191,7 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
 
   private async streamResponse(message: string, botMessageId: number) {
     try {
-      const response = await fetch('https://bizzhack-rag.onrender.com/query', {
+      const response = await fetch('http://127.0.0.1:5000/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -482,6 +549,8 @@ handleSuggestionClick(suggestion: string) {
 
   onDatabaseChange(){
     this.changedDatabase = !this.changedDatabase;
+    console.log('Database changed:', this.changedDatabase);
+
   }
 
   decodeBase16(hex: string): string {

@@ -17,12 +17,13 @@ export class ApiCallService {
 
      private uploadFile = 'https://bizzhack-rag.onrender.com/upload';
     private uploadUrl = 'https://bizzhack-rag.onrender.com/linkUpload';
+    private uploadSql = 'https://bizzhack-rag.onrender.com/sql';
+
 
  uploadFiles(namespace: string, files: File[]): Observable<any> {
   const formData = new FormData();
   formData.append('namespace', namespace);
-formData.append('index_name', 'new-rag-documents'); 
-
+ 
   for (const file of files) {
     formData.append('files', file);
   }
@@ -34,11 +35,19 @@ uploadLinks(namespace: string, urls: string[]): Observable<any> {
   debugger 
   const payload = {
     namespace,
-    index_name: 'new-rag-documents',
     urls: urls
   };
 
   return this.http.post<any>(this.uploadUrl, payload);
+}
+
+getSqlData(namespace: string, sqlQuery: string): Observable<any> {
+  const payload = {
+    namespace,
+    sqlQuery: sqlQuery
+  };
+
+  return this.http.post<any>(this.uploadSql, payload);
 }
 
 
