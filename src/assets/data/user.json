@@ -61,6 +61,13 @@
     "lastName": "Yamin",
     "role": "user",
     "business": ["B1", "B2", "B3","B4"]
+  },
+  {
+    "email": "test@gmail.com",
+    "firstName": "Test",
+    "lastName": "User",
+    "role": "admin",
+    "business": ["B1", "B2", "B3","B4"]
   }
 
 ]

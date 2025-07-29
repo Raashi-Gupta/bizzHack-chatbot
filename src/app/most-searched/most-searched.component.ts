@@ -33,17 +33,14 @@ export class MostSearchedComponent implements OnInit{
   //hardcodeQuestions
   questionsMap: Record<string, string[]> = {
     "EHS Safety Regulations": [
-      'What to do incase of building fire?',
-      'What to do if you inhale chemical',
-      'What is Customer relationship management',
-      'What are Data warehouse'],
+      'What is LOTO?',
+      "What is Information Tags?",
+      'What is ESP?'
+    ],
       "Tata Motors": [
-        'What is the Data integration and processing layers of TrendyThreads',
-        'What are data sources of TrendyThreads',
-        'What is the Data integration and processing layers of TrendyThreads',
-        'What are BI Tools',
-        'What is Evacuation Plan',
-        'What are Emergency Numbers',
+       'What are Tata Nexon common error codes?',
+       "What are Tata Motors Plants details?",
+       "Who are key components vendors?"
       ]
     };
   redirectToChat(question: string) {
