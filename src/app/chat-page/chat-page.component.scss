@@ -47,6 +47,8 @@
   word-wrap: break-word;
   transition: transform 0.3s;
   border: 1px solid #e2e2e2;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .user {
@@ -229,6 +231,7 @@
   transition: background-color 0.25s, color 0.25s;
   border: 1px solid #210073;
   white-space: nowrap;
+  white-space: pre-wrap
 }
 
 .suggestion-chip:hover,
