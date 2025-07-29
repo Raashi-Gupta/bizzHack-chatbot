@@ -238,12 +238,12 @@
   outline: none;
 }
 
-.recordButton{
+.featureButton{
   background-color: white;
   border: none;
   color:gray;
   &.selected {
-    background-color: grey;
+    background-color:#210073;
     color: rgb(255, 255, 255);
   }
 }
@@ -261,8 +261,8 @@
   color: red;
 }
 
-.recordButton:hover{
-  background-color: grey;
+.featureButton:hover{
+  background-color:#210073;
   border: none;
   transform: scale(1.05);
   color: rgb(255, 255, 255);

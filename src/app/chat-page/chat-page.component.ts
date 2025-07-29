@@ -337,7 +337,6 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
 
   ngAfterViewChecked(): void {
     this.scrollToBottom();
-    console.log(this.messages);
   }
 
   private scrollToBottom() {
@@ -543,7 +542,6 @@ handleSuggestionClick(suggestion: string) {
         'eng'
       );
       this.extractedText = result.data.text;
-      console.log(this.extractedText);
     }
   }
 
@@ -564,8 +562,21 @@ handleSuggestionClick(suggestion: string) {
 }
 
 translateMessage(msg: any, targetLang: string) {
+  console.log("originalText:", msg.originalText);
+  console.log("translatedText:", msg.text);
+
+  if (targetLang === 'en') {
+    msg.text = msg.originalText;
+    this.selectedLanguages[msg.id] = 'English';
+    return;
+  }
+
+  if (!msg.originalText) {
+    msg.originalText = msg.text;
+  }
+ 
   const div = document.createElement('div');
-  div.innerHTML = msg.text;
+  div.innerHTML = msg.originalText;
  
   const textNodes: Node[] = [];
  
@@ -583,15 +594,14 @@ translateMessage(msg: any, targetLang: string) {
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodedText}`;
  
     return this.http.get<any>(url).toPromise().then(res => {
-      const translatedText = res[0][0][0];
-      node.textContent = originalText.replace(originalText, translatedText);
+      const translatedText = res[0].map((item: any) => item[0]).join(' ');
+      node.textContent = translatedText;
     });
   });
  
   Promise.all(translatePromises).then(() => {
-    msg.text = div.innerHTML;
+    msg.text = div.innerHTML; // ✅ Apply translated HTML
     this.selectedLanguages[msg.id] = this.getLangLabel(targetLang);
-   // this.openDropdownMsgId = null;
   });
 
   this.openDropdownMsgId = null;

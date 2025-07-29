@@ -70,13 +70,13 @@
           <input [(ngModel)]="currentMessage" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
           <div class="send-button-inside">
             <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
-            <button pButton type="button" icon="pi pi-database" class="recordButton" pTooltip="Connect to database" tooltipPosition="top"
+            <button pButton type="button" icon="pi pi-database" class="featureButton" pTooltip="Connect to database" tooltipPosition="top"
               (click)="onDatabaseChange()" [ngClass]="{ 'selected': changedDatabase }"></button>
-            <button pButton type="button" icon="pi pi-plus" class="recordButton"
+            <button pButton type="button" icon="pi pi-plus" class="featureButton"pTooltip="Upload image" tooltipPosition="top"
               (click)="fileInput.click()"></button>
-            <button *ngIf="!isRecording" pButton type="button" icon="pi pi-microphone" class="recordButton"
+            <button *ngIf="!isRecording" pButton type="button" icon="pi pi-microphone" class="featureButton" pTooltip="Click to start recording" tooltipPosition="top"
               (click)="statRecording()"></button>
-            <button *ngIf="isRecording" pButton type="button" icon="pi pi-stop-circle" class="stopButton"
+            <button *ngIf="isRecording" pButton type="button" icon="pi pi-stop-circle" class="stopButton" pTooltip="Click to stop recording" tooltipPosition="top"
               (click)="stopRecording()"></button>
             <button pButton type="button" icon="pi pi-send" class="sendButton" (click)="sendMessage()"></button>
           </div>
