@@ -191,6 +191,11 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
 
   private async streamResponse(message: string, botMessageId: number) {
     try {
+      const filteredHistory = this.messages.slice(0,-2).filter(item => {
+        const hasIsSuggestion = item.hasOwnProperty('suggestions');
+        const hasImgTag = typeof item.text === 'string' && /<img\s/i.test(item.text);
+        return !hasIsSuggestion && !hasImgTag;
+      });
       const response = await fetch('http://127.0.0.1:5000/query', {
         method: 'POST',
         headers: {
@@ -199,7 +204,7 @@ export class ChatPageComponent implements AfterViewChecked, OnInit {
         body: JSON.stringify({ 
           query: message, 
           namespace: this.selectedBusiness ,
-          history: this.messages.slice(0, -2).filter(item => !item.hasOwnProperty('suggestions'))
+          history: filteredHistory
         })
       });
 
@@ -528,12 +533,52 @@ handleSuggestionClick(suggestion: string) {
   selectedFile: File | null = null;
   extractedText: string = '';
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
-    if (this.selectedFile) {
-      this.performOCR();
-    }
+  onFileSelected(event: any): void {
+  this.selectedFile = event.target.files[0];
+ 
+  if (this.selectedFile && this.selectedFile.type.startsWith('image/')) {
+    const reader = new FileReader();
+ 
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        // Resize logic
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 300; // Or any desired width
+        const scaleFactor = MAX_WIDTH / img.width;
+ 
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleFactor;
+ 
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+ 
+        const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+ 
+        this.messages.push({
+          id: Date.now(),
+          sender: 'user',
+          text: `
+<div class="image-uploaded-msg">
+  <a href="${resizedDataUrl}" target="_blank">
+    <img src="${resizedDataUrl}" class="chat-thumbnail" alt="Uploaded Image" />
+  </a>
+  <div>📷 Image uploaded</div>
+</div>
+          `,
+          originalText: '[Image uploaded]'
+        });
+ 
+        this.startedChat = true;
+        this.performOCR();
+      };
+      img.src = reader.result as string;
+    };
+ 
+    reader.readAsDataURL(this.selectedFile);
   }
+}
+ 
 
   async performOCR() {
     if (this.selectedFile) {

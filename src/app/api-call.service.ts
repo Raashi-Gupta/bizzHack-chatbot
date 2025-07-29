@@ -15,9 +15,9 @@ export class ApiCallService {
     // private uploadFile = 'http://127.0.0.1:5000/upload';
     // private uploadUrl = 'http://127.0.0.1:5000/linkUpload';
 
-     private uploadFile = 'https://bizzhack-rag.onrender.com/upload';
-    private uploadUrl = 'https://bizzhack-rag.onrender.com/linkUpload';
-    private uploadSql = 'https://bizzhack-rag.onrender.com/sql';
+     private uploadFile = 'http://127.0.0.1:5000/upload';
+    private uploadUrl = 'http://127.0.0.1:5000/linkUpload';
+    private uploadSql = 'http://127.0.0.1:5000/sql';
 
 
  uploadFiles(namespace: string, files: File[]): Observable<any> {
